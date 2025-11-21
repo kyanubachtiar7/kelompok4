@@ -20,7 +20,6 @@ const DashboardPage = () => {
   const [suhu, setSuhu] = useState('Menunggu data...');
   const [suhuHistory, setSuhuHistory] = useState<SuhuData[]>([]);
   const [client, setClient] = useState<MqttClient | null>(null);
-  const [videoFrame, setVideoFrame] = useState<string | null>(null);
 
   useEffect(() => {
     const mqttClient = mqtt.connect('wss://broker.hivemq.com:8884/mqtt');
@@ -31,11 +30,6 @@ const DashboardPage = () => {
       mqttClient.subscribe('kel4/il/suhu', (err) => {
         if (err) {
           console.error('Gagal berlangganan topik suhu:', err);
-        }
-      });
-      mqttClient.subscribe('kel4/il/stream', (err) => {
-        if (err) {
-          console.error('Gagal berlangganan topik stream:', err);
         }
       });
     });
@@ -57,8 +51,6 @@ const DashboardPage = () => {
           }
           return updatedHistory;
         });
-      } else if (topic === 'kel4/il/stream') {
-        setVideoFrame(payload.toString());
       }
     });
 
@@ -155,7 +147,7 @@ const DashboardPage = () => {
               <SuhuChart data={suhuHistory} />
             </CardContent>
           </Card>
-          <VideoStream frameData={videoFrame} />
+          <VideoStream />
         </div>
       </div>
     </div>
