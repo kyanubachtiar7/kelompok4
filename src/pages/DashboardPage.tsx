@@ -5,19 +5,24 @@ import { useAuth } from '../context/AuthContext';
 import { Thermometer, Droplets, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import mqtt from 'mqtt';
+import SuhuChart from '@/components/SuhuChart';
+
+interface SuhuData {
+  name: string;
+  suhu: number;
+}
 
 const DashboardPage = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [suhu, setSuhu] = useState('Menunggu data...');
+  const [suhuHistory, setSuhuHistory] = useState<SuhuData[]>([]);
 
   useEffect(() => {
-    // Konfigurasi koneksi ke broker MQTT HiveMQ melalui WebSocket
     const client = mqtt.connect('wss://broker.hivemq.com:8884/mqtt');
 
     client.on('connect', () => {
       console.log('Terhubung ke broker MQTT HiveMQ');
-      // Berlangganan ke topik suhu
       client.subscribe('kel4/il/suhu', (err) => {
         if (err) {
           console.error('Gagal berlangganan topik:', err);
@@ -27,8 +32,22 @@ const DashboardPage = () => {
 
     client.on('message', (topic, payload) => {
       if (topic === 'kel4/il/suhu') {
-        // Perbarui state dengan data suhu yang diterima
-        setSuhu(payload.toString());
+        const suhuValue = payload.toString();
+        setSuhu(suhuValue);
+
+        const newSuhuData: SuhuData = {
+          name: new Date().toLocaleTimeString(),
+          suhu: parseFloat(suhuValue),
+        };
+
+        setSuhuHistory(prevHistory => {
+          const updatedHistory = [...prevHistory, newSuhuData];
+          // Batasi riwayat hingga 20 titik data terakhir
+          if (updatedHistory.length > 20) {
+            return updatedHistory.slice(updatedHistory.length - 20);
+          }
+          return updatedHistory;
+        });
       }
     });
 
@@ -37,13 +56,12 @@ const DashboardPage = () => {
       client.end();
     });
 
-    // Membersihkan koneksi saat komponen di-unmount
     return () => {
       if (client) {
         client.end();
       }
     };
-  }, []); // Array dependensi kosong agar efek ini hanya berjalan sekali
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -86,6 +104,16 @@ const DashboardPage = () => {
             <CardContent>
               <div className="text-2xl font-bold text-green-500">Menyala</div>
               <p className="text-xs text-muted-foreground">Lampu ruang tamu</p>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Grafik Suhu Real-time</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <SuhuChart data={suhuHistory} />
             </CardContent>
           </Card>
         </div>
