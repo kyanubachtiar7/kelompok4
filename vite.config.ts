@@ -7,6 +7,7 @@ export default defineConfig(() => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: ["kelompok4.dpdns.org"],
   },
   plugins: [dyadComponentTagger(), react()],
   resolve: {
