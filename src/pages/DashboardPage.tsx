@@ -72,7 +72,7 @@ const DashboardPage = () => {
 
   const handlePublish = (mode: 'manual' | 'auto') => {
     if (client) {
-      const topic = 'kel4/il/manualuato';
+      const topic = 'kel4/il/mode';
       client.publish(topic, mode, (error) => {
         if (error) {
           showError('Gagal mengirim perintah.');
