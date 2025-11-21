@@ -1,12 +1,49 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '../context/AuthContext';
 import { Thermometer, Droplets, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import mqtt from 'mqtt';
 
 const DashboardPage = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const [suhu, setSuhu] = useState('Menunggu data...');
+
+  useEffect(() => {
+    // Konfigurasi koneksi ke broker MQTT HiveMQ melalui WebSocket
+    const client = mqtt.connect('wss://broker.hivemq.com:8884/mqtt');
+
+    client.on('connect', () => {
+      console.log('Terhubung ke broker MQTT HiveMQ');
+      // Berlangganan ke topik suhu
+      client.subscribe('kel4/il/suhu', (err) => {
+        if (err) {
+          console.error('Gagal berlangganan topik:', err);
+        }
+      });
+    });
+
+    client.on('message', (topic, payload) => {
+      if (topic === 'kel4/il/suhu') {
+        // Perbarui state dengan data suhu yang diterima
+        setSuhu(payload.toString());
+      }
+    });
+
+    client.on('error', (err) => {
+      console.error('Koneksi MQTT Error:', err);
+      client.end();
+    });
+
+    // Membersihkan koneksi saat komponen di-unmount
+    return () => {
+      if (client) {
+        client.end();
+      }
+    };
+  }, []); // Array dependensi kosong agar efek ini hanya berjalan sekali
 
   const handleLogout = () => {
     logout();
@@ -27,8 +64,8 @@ const DashboardPage = () => {
               <Thermometer className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">24°C</div>
-              <p className="text-xs text-muted-foreground">Kondisi normal</p>
+              <div className="text-2xl font-bold">{suhu}°C</div>
+              <p className="text-xs text-muted-foreground">Data dari MQTT</p>
             </CardContent>
           </Card>
           <Card>
