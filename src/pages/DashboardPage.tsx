@@ -6,6 +6,7 @@ import { Thermometer, Droplets, Lightbulb, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import mqtt, { MqttClient } from 'mqtt';
 import SuhuChart from '@/components/SuhuChart';
+import VideoStream from '@/components/VideoStream';
 import { showSuccess, showError } from '@/utils/toast';
 
 interface SuhuData {
@@ -19,6 +20,7 @@ const DashboardPage = () => {
   const [suhu, setSuhu] = useState('Menunggu data...');
   const [suhuHistory, setSuhuHistory] = useState<SuhuData[]>([]);
   const [client, setClient] = useState<MqttClient | null>(null);
+  const [videoFrame, setVideoFrame] = useState<string | null>(null);
 
   useEffect(() => {
     const mqttClient = mqtt.connect('wss://broker.hivemq.com:8884/mqtt');
@@ -29,6 +31,11 @@ const DashboardPage = () => {
       mqttClient.subscribe('kel4/il/suhu', (err) => {
         if (err) {
           console.error('Gagal berlangganan topik suhu:', err);
+        }
+      });
+      mqttClient.subscribe('kel4/il/stream', (err) => {
+        if (err) {
+          console.error('Gagal berlangganan topik stream:', err);
         }
       });
     });
@@ -50,6 +57,8 @@ const DashboardPage = () => {
           }
           return updatedHistory;
         });
+      } else if (topic === 'kel4/il/stream') {
+        setVideoFrame(payload.toString());
       }
     });
 
@@ -137,7 +146,7 @@ const DashboardPage = () => {
             </CardContent>
           </Card>
         </div>
-        <div className="mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
           <Card>
             <CardHeader>
               <CardTitle>Grafik Suhu Real-time</CardTitle>
@@ -146,6 +155,7 @@ const DashboardPage = () => {
               <SuhuChart data={suhuHistory} />
             </CardContent>
           </Card>
+          <VideoStream frameData={videoFrame} />
         </div>
       </div>
     </div>
