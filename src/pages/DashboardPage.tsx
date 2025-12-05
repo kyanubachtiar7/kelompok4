@@ -5,7 +5,7 @@ import { Thermometer, Droplets, Users, Lightbulb, Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SuhuChart from '@/components/SuhuChart';
 import KelembapanChart from '@/components/KelembapanChart';
-import VideoStream from '@/components/VideoStream';
+import CameraStream from '@/components/CameraStream';
 import { useMQTT } from '../context/MQTTContext';
 import { Progress } from '@/components/ui/progress';
 
@@ -33,7 +33,7 @@ const DashboardPage = () => {
 
   const getStatusColor = (status: string) => {
     if (status === 'Terhubung') return 'text-green-400';
-    if (status === 'Terputus' || status === 'Error' || status === 'Menyambungkan ulang...') return 'text-red-400';
+    if (status === 'Terputus' || status === 'Error') return 'text-red-400';
     return 'text-yellow-400';
   };
 
@@ -129,10 +129,10 @@ const DashboardPage = () => {
 
         <Card className={cardClasses}>
           <CardHeader>
-            <CardTitle>Pose Stream</CardTitle>
+            <CardTitle>Deteksi Kehadiran via Kamera</CardTitle>
           </CardHeader>
           <CardContent>
-            <VideoStream />
+            <CameraStream />
           </CardContent>
         </Card>
       </div>

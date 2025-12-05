@@ -74,7 +74,7 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
       });
     });
 
-    client.on('reconnect', () => setConnectionStatus('Menyambungkan ulang...'));
+    client.on('reconnect', () => setConnectionStatus('Menghubungkan...'));
     client.on('close', () => setConnectionStatus('Terputus'));
     client.on('error', (err) => {
       console.error('Koneksi MQTT Error:', err);
