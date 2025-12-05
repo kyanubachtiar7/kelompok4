@@ -8,6 +8,7 @@ import KelembapanChart from '@/components/KelembapanChart';
 import VideoStream from '@/components/VideoStream';
 import { useMQTT } from '../context/MQTTContext';
 import { Progress } from '@/components/ui/progress';
+import PresenceCameraCard from '@/components/PresenceCameraCard';
 
 const DashboardPage = () => {
   const { logout } = useAuth();
@@ -61,7 +62,7 @@ const DashboardPage = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6">
           <Card className={cardClasses}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Suhu Ruangan</CardTitle>
@@ -84,16 +85,17 @@ const DashboardPage = () => {
           </Card>
           <Card className={cardClasses}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Kehadiran Orang</CardTitle>
+              <CardTitle className="text-sm font-medium">Kehadiran (Sensor)</CardTitle>
               <Users className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{presenceStatus || 'Menunggu...'}</div>
               <p className="text-xs text-muted-foreground">
-                Berdasarkan deteksi sensor
+                Berdasarkan sensor PIR
               </p>
             </CardContent>
           </Card>
+          <PresenceCameraCard />
           <Card className={cardClasses}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Status LED</CardTitle>

@@ -15,6 +15,8 @@ interface MQTTContextState {
   presenceStatus?: string;
   ledStatus?: string;
   buzzerStatus?: string;
+  cameraPresence?: number;
+  cameraPersonCount?: number;
   suhuHistory: HistoryData<number>[];
   kelembapanHistory: HistoryData<number>[];
   presenceHistory: HistoryData<string>[];
@@ -28,11 +30,12 @@ const MAX_HISTORY = 50;
 // Konfigurasi broker MQTT publik HiveMQ
 const MQTT_BROKER_URL = 'wss://broker.hivemq.com:8884/mqtt';
 const MQTT_OPTIONS = {
-  clientId: 'dyad-dashboard-kel4',
+  clientId: 'dyad-dashboard-kel4-presence', // Client ID sedikit diubah untuk menghindari konflik
   clean: true,
   reconnectPeriod: 1000,
 };
-const TOPIC = 'kel4/il/dyad/state';
+const SENSOR_TOPIC = 'kel4/il/dyad/state';
+const CAMERA_TOPIC = 'kel4/il/presence_cam';
 
 // Helper function untuk memperbarui riwayat
 const updateHistory = <T,>(prevHistory: HistoryData<T>[], newValue: T): HistoryData<T>[] => {
@@ -46,12 +49,17 @@ const updateHistory = <T,>(prevHistory: HistoryData<T>[], newValue: T): HistoryD
 
 export const MQTTProvider = ({ children }: { children: ReactNode }) => {
   const [connectionStatus, setConnectionStatus] = useState('Menghubungkan...');
+  // State dari topik sensor
   const [suhu, setSuhu] = useState<number | undefined>();
   const [kelembapan, setKelembapan] = useState<number | undefined>();
   const [presenceStatus, setPresenceStatus] = useState<string | undefined>();
   const [ledStatus, setLedStatus] = useState<string | undefined>();
   const [buzzerStatus, setBuzzerStatus] = useState<string | undefined>();
+  // State dari topik kamera
+  const [cameraPresence, setCameraPresence] = useState<number | undefined>();
+  const [cameraPersonCount, setCameraPersonCount] = useState<number | undefined>();
 
+  // State riwayat
   const [suhuHistory, setSuhuHistory] = useState<HistoryData<number>[]>([]);
   const [kelembapanHistory, setKelembapanHistory] = useState<HistoryData<number>[]>([]);
   const [presenceHistory, setPresenceHistory] = useState<HistoryData<string>[]>([]);
@@ -63,11 +71,12 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
 
     client.on('connect', () => {
       setConnectionStatus('Terhubung');
-      client.subscribe(TOPIC, (err) => {
+      const topics = [SENSOR_TOPIC, CAMERA_TOPIC];
+      client.subscribe(topics, (err) => {
         if (err) {
           console.error('Gagal subscribe ke topik:', err);
         } else {
-          console.log('Berhasil subscribe ke topik:', TOPIC);
+          console.log('Berhasil subscribe ke topik:', topics.join(', '));
         }
       });
     });
@@ -81,47 +90,45 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     });
 
     client.on('message', (topic, payload) => {
-      if (topic === TOPIC) {
-        const payloadString = payload.toString();
-        console.log('MQTT message received:', topic, payloadString);
-        try {
-          const data = JSON.parse(payloadString);
+      const payloadString = payload.toString();
+      console.log('MQTT message received:', topic, payloadString);
+      try {
+        const data = JSON.parse(payloadString);
 
-          // Suhu
+        if (topic === SENSOR_TOPIC) {
           if (typeof data.suhu === 'number') {
             setSuhu(data.suhu);
             setSuhuHistory(prev => updateHistory(prev, data.suhu));
           }
-
-          // Kelembapan
           if (typeof data.kelembapan === 'number') {
             setKelembapan(data.kelembapan);
             setKelembapanHistory(prev => updateHistory(prev, data.kelembapan));
           }
-
-          // Presence
           if (data.presence === 1 || data.presence === 0) {
             const status = data.presence === 1 ? 'ADA ORANG' : 'TIDAK ADA ORANG';
             setPresenceStatus(status);
             setPresenceHistory(prev => updateHistory(prev, status));
           }
-
-          // LED
           if (data.led === 1 || data.led === 0) {
             const status = data.led === 1 ? 'LED MENYALA' : 'LED MATI';
             setLedStatus(status);
             setLedHistory(prev => updateHistory(prev, status));
           }
-
-          // Buzzer
           if (data.buzzer === 1 || data.buzzer === 0) {
             const status = data.buzzer === 1 ? 'BUZZER MENYALA' : 'BUZZER MATI';
             setBuzzerStatus(status);
             setBuzzerHistory(prev => updateHistory(prev, status));
           }
-        } catch (error) {
-          console.error('Gagal parse JSON dari MQTT:', error);
+        } else if (topic === CAMERA_TOPIC) {
+          if (typeof data.presence === 'number') {
+            setCameraPresence(data.presence);
+          }
+          if (typeof data.count === 'number') {
+            setCameraPersonCount(data.count);
+          }
         }
+      } catch (error) {
+        console.error('Gagal parse JSON dari MQTT:', error);
       }
     });
 
@@ -139,6 +146,8 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     presenceStatus,
     ledStatus,
     buzzerStatus,
+    cameraPresence,
+    cameraPersonCount,
     suhuHistory,
     kelembapanHistory,
     presenceHistory,
