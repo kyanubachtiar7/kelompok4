@@ -5,7 +5,7 @@ import { Thermometer, Droplets, Users, Lightbulb, Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SuhuChart from '@/components/SuhuChart';
 import KelembapanChart from '@/components/KelembapanChart';
-import CameraStream from '@/components/CameraStream';
+import VideoStream from '@/components/VideoStream';
 import { useMQTT } from '../context/MQTTContext';
 import { Progress } from '@/components/ui/progress';
 
@@ -129,10 +129,10 @@ const DashboardPage = () => {
 
         <Card className={cardClasses}>
           <CardHeader>
-            <CardTitle>Deteksi Kehadiran via Kamera</CardTitle>
+            <CardTitle>Pose Stream</CardTitle>
           </CardHeader>
           <CardContent>
-            <CameraStream />
+            <VideoStream />
           </CardContent>
         </Card>
       </div>
