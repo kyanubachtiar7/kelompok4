@@ -15,8 +15,6 @@ interface MQTTContextState {
   presenceStatus?: string;
   ledStatus?: string;
   buzzerStatus?: string;
-  cameraPresence?: number;
-  cameraPersonCount?: number;
   suhuHistory: HistoryData<number>[];
   kelembapanHistory: HistoryData<number>[];
   presenceHistory: HistoryData<string>[];
@@ -35,7 +33,6 @@ const MQTT_OPTIONS = {
   reconnectPeriod: 1000,
 };
 const SENSOR_TOPIC = 'kel4/il/dyad/state';
-const CAMERA_TOPIC = 'kel4/il/presence_cam';
 
 // Helper function untuk memperbarui riwayat
 const updateHistory = <T,>(prevHistory: HistoryData<T>[], newValue: T): HistoryData<T>[] => {
@@ -55,9 +52,6 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
   const [presenceStatus, setPresenceStatus] = useState<string | undefined>();
   const [ledStatus, setLedStatus] = useState<string | undefined>();
   const [buzzerStatus, setBuzzerStatus] = useState<string | undefined>();
-  // State dari topik kamera
-  const [cameraPresence, setCameraPresence] = useState<number | undefined>();
-  const [cameraPersonCount, setCameraPersonCount] = useState<number | undefined>();
 
   // State riwayat
   const [suhuHistory, setSuhuHistory] = useState<HistoryData<number>[]>([]);
@@ -71,12 +65,11 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
 
     client.on('connect', () => {
       setConnectionStatus('Terhubung');
-      const topics = [SENSOR_TOPIC, CAMERA_TOPIC];
-      client.subscribe(topics, (err) => {
+      client.subscribe(SENSOR_TOPIC, (err) => {
         if (err) {
           console.error('Gagal subscribe ke topik:', err);
         } else {
-          console.log('Berhasil subscribe ke topik:', topics.join(', '));
+          console.log('Berhasil subscribe ke topik:', SENSOR_TOPIC);
         }
       });
     });
@@ -119,13 +112,6 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
             setBuzzerStatus(status);
             setBuzzerHistory(prev => updateHistory(prev, status));
           }
-        } else if (topic === CAMERA_TOPIC) {
-          if (typeof data.presence === 'number') {
-            setCameraPresence(data.presence);
-          }
-          if (typeof data.count === 'number') {
-            setCameraPersonCount(data.count);
-          }
         }
       } catch (error) {
         console.error('Gagal parse JSON dari MQTT:', error);
@@ -146,8 +132,6 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     presenceStatus,
     ledStatus,
     buzzerStatus,
-    cameraPresence,
-    cameraPersonCount,
     suhuHistory,
     kelembapanHistory,
     presenceHistory,
