@@ -22,10 +22,10 @@ interface MQTTContextState {
 
 const MQTTContext = createContext<MQTTContextState | undefined>(undefined);
 
-const MAX_HISTORY = 20;
+const MAX_HISTORY = 50; // Batas riwayat diperbarui menjadi 50
 const MQTT_BROKER_URL = 'ws://localhost:9001';
-// Memperbaiki nama topik sesuai permintaan
-const TOPICS = ['kelompok4/il/suhu', 'kelompok4/il/kelembapan', 'kelompok4/il/presence', 'kelompok4/il/led'];
+// Menggunakan nama topik yang lebih pendek sesuai permintaan
+const TOPICS = ['kel4/il/suhu', 'kel4/il/kelembapan', 'kel4/il/presence', 'kel4/il/led'];
 
 // Helper function untuk memperbarui riwayat
 const updateHistory = <T,>(prevHistory: HistoryData<T>[], newValue: T): HistoryData<T>[] => {
@@ -75,35 +75,42 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     });
 
     client.on('message', (topic, payload) => {
-      // Menambahkan console.log untuk debugging
-      console.log('MQTT message received:', topic, payload.toString());
-      
-      try {
-        const message = JSON.parse(payload.toString());
-        const value = message.value;
+      const payloadString = payload.toString();
+      console.log('MQTT message received:', topic, payloadString);
 
-        switch (topic) {
-          case 'kelompok4/il/suhu':
+      switch (topic) {
+        case 'kel4/il/suhu': {
+          const value = parseFloat(payloadString);
+          if (!isNaN(value)) {
             setSuhu(value);
             setSuhuHistory(prev => updateHistory(prev, value));
-            break;
-          case 'kelompok4/il/kelembapan':
+          }
+          break;
+        }
+        case 'kel4/il/kelembapan': {
+          const value = parseFloat(payloadString);
+          if (!isNaN(value)) {
             setKelembapan(value);
             setKelembapanHistory(prev => updateHistory(prev, value));
-            break;
-          case 'kelompok4/il/presence':
+          }
+          break;
+        }
+        case 'kel4/il/presence': {
+          const value = parseInt(payloadString, 10);
+          if (!isNaN(value)) {
             setPresence(value);
             setPresenceHistory(prev => updateHistory(prev, value));
-            break;
-          case 'kelompok4/il/led':
-            setLedStatus(value);
-            setLedHistory(prev => updateHistory(prev, value));
-            break;
-          default:
-            break;
+          }
+          break;
         }
-      } catch (error) {
-        console.error('Gagal mem-parsing payload JSON:', error, 'Payload:', payload.toString());
+        case 'kel4/il/led': {
+          const value = payloadString.toUpperCase();
+          setLedStatus(value);
+          setLedHistory(prev => updateHistory(prev, value));
+          break;
+        }
+        default:
+          break;
       }
     });
 
