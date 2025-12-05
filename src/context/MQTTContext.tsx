@@ -14,10 +14,12 @@ interface MQTTContextState {
   kelembapan?: number;
   presenceStatus?: string;
   ledStatus?: string;
+  buzzerStatus?: string;
   suhuHistory: HistoryData<number>[];
   kelembapanHistory: HistoryData<number>[];
   presenceHistory: HistoryData<string>[];
   ledHistory: HistoryData<string>[];
+  buzzerHistory: HistoryData<string>[];
 }
 
 const MQTTContext = createContext<MQTTContextState | undefined>(undefined);
@@ -30,7 +32,7 @@ const MQTT_OPTIONS = {
   clean: true,
   reconnectPeriod: 1000,
 };
-const TOPICS = ['kel4/il/suhu', 'kel4/il/kelembapan', 'kel4/il/presence', 'kel4/il/led'];
+const TOPIC = 'kel4/il/dyad/state';
 
 // Helper function untuk memperbarui riwayat
 const updateHistory = <T,>(prevHistory: HistoryData<T>[], newValue: T): HistoryData<T>[] => {
@@ -48,22 +50,24 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
   const [kelembapan, setKelembapan] = useState<number | undefined>();
   const [presenceStatus, setPresenceStatus] = useState<string | undefined>();
   const [ledStatus, setLedStatus] = useState<string | undefined>();
+  const [buzzerStatus, setBuzzerStatus] = useState<string | undefined>();
 
   const [suhuHistory, setSuhuHistory] = useState<HistoryData<number>[]>([]);
   const [kelembapanHistory, setKelembapanHistory] = useState<HistoryData<number>[]>([]);
   const [presenceHistory, setPresenceHistory] = useState<HistoryData<string>[]>([]);
   const [ledHistory, setLedHistory] = useState<HistoryData<string>[]>([]);
+  const [buzzerHistory, setBuzzerHistory] = useState<HistoryData<string>[]>([]);
 
   useEffect(() => {
     const client = mqtt.connect(MQTT_BROKER_URL, MQTT_OPTIONS);
 
     client.on('connect', () => {
       setConnectionStatus('Terhubung');
-      client.subscribe(TOPICS, (err) => {
+      client.subscribe(TOPIC, (err) => {
         if (err) {
           console.error('Gagal subscribe ke topik:', err);
         } else {
-          console.log('Berhasil subscribe ke topik:', TOPICS);
+          console.log('Berhasil subscribe ke topik:', TOPIC);
         }
       });
     });
@@ -77,42 +81,47 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     });
 
     client.on('message', (topic, payload) => {
-      const payloadString = payload.toString();
-      console.log('MQTT message received:', topic, payloadString);
+      if (topic === TOPIC) {
+        const payloadString = payload.toString();
+        console.log('MQTT message received:', topic, payloadString);
+        try {
+          const data = JSON.parse(payloadString);
 
-      switch (topic) {
-        case 'kel4/il/suhu': {
-          const value = parseFloat(payloadString);
-          if (!isNaN(value)) {
-            setSuhu(value);
-            setSuhuHistory(prev => updateHistory(prev, value));
+          // Suhu
+          if (typeof data.suhu === 'number') {
+            setSuhu(data.suhu);
+            setSuhuHistory(prev => updateHistory(prev, data.suhu));
           }
-          break;
-        }
-        case 'kel4/il/kelembapan': {
-          const value = parseFloat(payloadString);
-          if (!isNaN(value)) {
-            setKelembapan(value);
-            setKelembapanHistory(prev => updateHistory(prev, value));
+
+          // Kelembapan
+          if (typeof data.kelembapan === 'number') {
+            setKelembapan(data.kelembapan);
+            setKelembapanHistory(prev => updateHistory(prev, data.kelembapan));
           }
-          break;
+
+          // Presence
+          if (data.presence === 1 || data.presence === 0) {
+            const status = data.presence === 1 ? 'ADA ORANG' : 'TIDAK ADA ORANG';
+            setPresenceStatus(status);
+            setPresenceHistory(prev => updateHistory(prev, status));
+          }
+
+          // LED
+          if (data.led === 1 || data.led === 0) {
+            const status = data.led === 1 ? 'LED MENYALA' : 'LED MATI';
+            setLedStatus(status);
+            setLedHistory(prev => updateHistory(prev, status));
+          }
+
+          // Buzzer
+          if (data.buzzer === 1 || data.buzzer === 0) {
+            const status = data.buzzer === 1 ? 'BUZZER MENYALA' : 'BUZZER MATI';
+            setBuzzerStatus(status);
+            setBuzzerHistory(prev => updateHistory(prev, status));
+          }
+        } catch (error) {
+          console.error('Gagal parse JSON dari MQTT:', error);
         }
-        case 'kel4/il/presence': {
-          const value = payloadString.trim();
-          const status = value === '1' ? 'ADA ORANG' : 'TIDAK ADA ORANG';
-          setPresenceStatus(status);
-          setPresenceHistory(prev => updateHistory(prev, status));
-          break;
-        }
-        case 'kel4/il/led': {
-          const value = payloadString.trim();
-          const status = value === '1' ? 'ON' : 'OFF';
-          setLedStatus(status);
-          setLedHistory(prev => updateHistory(prev, status));
-          break;
-        }
-        default:
-          break;
       }
     });
 
@@ -129,10 +138,12 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     kelembapan,
     presenceStatus,
     ledStatus,
+    buzzerStatus,
     suhuHistory,
     kelembapanHistory,
     presenceHistory,
     ledHistory,
+    buzzerHistory,
   };
 
   return <MQTTContext.Provider value={value}>{children}</MQTTContext.Provider>;

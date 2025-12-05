@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '../context/AuthContext';
-import { Thermometer, Droplets, Users, Lightbulb } from 'lucide-react';
+import { Thermometer, Droplets, Users, Lightbulb, Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SuhuChart from '@/components/SuhuChart';
 import KelembapanChart from '@/components/KelembapanChart';
@@ -18,6 +18,7 @@ const DashboardPage = () => {
     kelembapan,
     presenceStatus,
     ledStatus,
+    buzzerStatus,
     suhuHistory,
     kelembapanHistory 
   } = useMQTT();
@@ -60,7 +61,7 @@ const DashboardPage = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-6">
           <Card className={cardClasses}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Suhu Ruangan</CardTitle>
@@ -100,6 +101,16 @@ const DashboardPage = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{ledStatus || 'Menunggu...'}</div>
+              <p className="text-xs text-muted-foreground">Status perangkat output</p>
+            </CardContent>
+          </Card>
+          <Card className={cardClasses}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Status Buzzer</CardTitle>
+              <Bell className="h-4 w-4 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{buzzerStatus || 'Menunggu...'}</div>
               <p className="text-xs text-muted-foreground">Status perangkat output</p>
             </CardContent>
           </Card>
