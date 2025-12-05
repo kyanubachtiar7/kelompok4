@@ -29,10 +29,10 @@ const DashboardPage = () => {
   const [kelembapanHistory, setKelembapanHistory] = useState<KelembapanData[]>([]);
   
   useEffect(() => {
-    const client = mqtt.connect('wss://broker.hivemq.com:8884/mqtt');
+    const client = mqtt.connect('ws://localhost:1883/mqtt');
 
     client.on('connect', () => {
-      console.log('Terhubung ke broker MQTT HiveMQ');
+      console.log('Terhubung ke broker MQTT lokal');
       client.subscribe('kel4/il/suhu', (err) => {
         if (err) console.error('Gagal berlangganan topik suhu:', err);
       });
