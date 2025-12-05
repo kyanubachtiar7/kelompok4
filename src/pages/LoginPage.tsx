@@ -27,7 +27,7 @@ const LoginPage = () => {
       <Card className="w-full max-w-sm bg-card/80 backdrop-blur-sm border border-primary/20">
         <CardHeader className="items-center text-center">
           <img 
-            src="https://www.polines.ac.id/wp-content/uploads/2018/01/logo-polines-asli.png" 
+            src="/logo-polines.png" 
             alt="Logo Politeknik Negeri Semarang" 
             className="w-24 h-24 mb-4" 
           />
