@@ -28,10 +28,10 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-sm">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-sm border border-primary/20">
         <CardHeader>
-          <CardTitle className="text-2xl">Daftar Akun</CardTitle>
+          <CardTitle className="text-2xl text-primary">Daftar Akun</CardTitle>
           <CardDescription>Buat akun baru untuk mengakses dasbor.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -61,7 +61,7 @@ const RegisterPage = () => {
             </Button>
             <div className="mt-4 text-center text-sm">
               Sudah punya akun?{' '}
-              <Link to="/login" className="underline">
+              <Link to="/login" className="underline text-primary">
                 Masuk
               </Link>
             </div>

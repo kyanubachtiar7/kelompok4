@@ -23,10 +23,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-sm">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-sm border border-primary/20">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl text-primary">Login</CardTitle>
           <CardDescription>Masuk untuk mengakses dasbor IoT.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -58,7 +58,7 @@ const LoginPage = () => {
             </Button>
             <div className="mt-4 text-center text-sm">
               Belum punya akun?{' '}
-              <Link to="/register" className="underline">
+              <Link to="/register" className="underline text-primary">
                 Daftar
               </Link>
             </div>
