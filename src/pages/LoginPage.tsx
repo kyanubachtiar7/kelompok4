@@ -25,7 +25,12 @@ const LoginPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-sm bg-card/80 backdrop-blur-sm border border-primary/20">
-        <CardHeader>
+        <CardHeader className="items-center text-center">
+          <img 
+            src="https://upload.wikimedia.org/wikipedia/id/thumb/0/09/Logo_Politeknik_Negeri_Semarang.png/1200px-Logo_Politeknik_Negeri_Semarang.png" 
+            alt="Logo Politeknik Negeri Semarang" 
+            className="w-24 h-24 mb-4" 
+          />
           <CardTitle className="text-2xl text-primary">Login</CardTitle>
           <CardDescription>Masuk untuk mengakses dasbor IoT.</CardDescription>
         </CardHeader>
