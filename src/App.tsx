@@ -10,6 +10,7 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { MQTTProvider } from "./context/MQTTContext";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +29,9 @@ const App = () => (
               path="/dashboard" 
               element={
                 <ProtectedRoute>
-                  <DashboardPage />
+                  <MQTTProvider>
+                    <DashboardPage />
+                  </MQTTProvider>
                 </ProtectedRoute>
               } 
             />
