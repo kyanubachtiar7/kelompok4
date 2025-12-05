@@ -2,7 +2,7 @@ const VIDEO_STREAM_URL = "http://127.0.0.1:5000";
 
 const VideoStream = () => {
   return (
-    <div className="aspect-video rounded-md overflow-hidden">
+    <div className="aspect-video rounded-md overflow-hidden border border-primary/20">
       <iframe
         src={VIDEO_STREAM_URL}
         title="Pose Stream"
