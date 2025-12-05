@@ -23,8 +23,9 @@ interface MQTTContextState {
 const MQTTContext = createContext<MQTTContextState | undefined>(undefined);
 
 const MAX_HISTORY = 20;
-const MQTT_BROKER_URL = 'ws://localhost:9001'; // Diperbarui ke port WebSocket
-const TOPICS = ['kel4/il/suhu', 'kel4/il/kelembapan', 'kel4/il/presence', 'kel4/il/led'];
+const MQTT_BROKER_URL = 'ws://localhost:9001';
+// Memperbaiki nama topik sesuai permintaan
+const TOPICS = ['kelompok4/il/suhu', 'kelompok4/il/kelembapan', 'kelompok4/il/presence', 'kelompok4/il/led'];
 
 // Helper function untuk memperbarui riwayat
 const updateHistory = <T,>(prevHistory: HistoryData<T>[], newValue: T): HistoryData<T>[] => {
@@ -49,7 +50,6 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
   const [ledHistory, setLedHistory] = useState<HistoryData<string>[]>([]);
 
   useEffect(() => {
-    // Opsi koneksi diperbarui
     const client = mqtt.connect(MQTT_BROKER_URL, {
       clean: true,
       reconnectPeriod: 1000,
@@ -60,18 +60,14 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
       client.subscribe(TOPICS, (err) => {
         if (err) {
           console.error('Gagal subscribe ke topik:', err);
+        } else {
+          console.log('Berhasil subscribe ke topik:', TOPICS);
         }
       });
     });
 
-    client.on('reconnect', () => {
-      setConnectionStatus('Menyambungkan ulang...');
-    });
-
-    client.on('close', () => {
-      setConnectionStatus('Terputus');
-    });
-    
+    client.on('reconnect', () => setConnectionStatus('Menyambungkan ulang...'));
+    client.on('close', () => setConnectionStatus('Terputus'));
     client.on('error', (err) => {
       console.error('Koneksi MQTT Error:', err);
       setConnectionStatus('Error');
@@ -79,27 +75,27 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     });
 
     client.on('message', (topic, payload) => {
+      // Menambahkan console.log untuk debugging
+      console.log('MQTT message received:', topic, payload.toString());
+      
       try {
         const message = JSON.parse(payload.toString());
-        // Menambahkan console.log untuk debugging
-        console.log(`Pesan diterima dari topik [${topic}]:`, message);
-        
         const value = message.value;
 
         switch (topic) {
-          case 'kel4/il/suhu':
+          case 'kelompok4/il/suhu':
             setSuhu(value);
             setSuhuHistory(prev => updateHistory(prev, value));
             break;
-          case 'kel4/il/kelembapan':
+          case 'kelompok4/il/kelembapan':
             setKelembapan(value);
             setKelembapanHistory(prev => updateHistory(prev, value));
             break;
-          case 'kel4/il/presence':
+          case 'kelompok4/il/presence':
             setPresence(value);
             setPresenceHistory(prev => updateHistory(prev, value));
             break;
-          case 'kel4/il/led':
+          case 'kelompok4/il/led':
             setLedStatus(value);
             setLedHistory(prev => updateHistory(prev, value));
             break;
@@ -107,7 +103,7 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
             break;
         }
       } catch (error) {
-        console.error('Gagal mem-parsing payload JSON:', error);
+        console.error('Gagal mem-parsing payload JSON:', error, 'Payload:', payload.toString());
       }
     });
 

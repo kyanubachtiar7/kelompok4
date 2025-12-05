@@ -32,7 +32,7 @@ const DashboardPage = () => {
 
   const getStatusColor = (status: string) => {
     if (status === 'Terhubung') return 'text-green-500';
-    if (status === 'Terputus' || status === 'Error') return 'text-red-500';
+    if (status === 'Terputus' || status === 'Error' || status === 'Menyambungkan ulang...') return 'text-red-500';
     return 'text-yellow-500';
   };
 
@@ -81,7 +81,7 @@ const DashboardPage = () => {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{presence === 1 ? 'ADA' : presence === 0 ? 'TIDAK ADA' : 'Menunggu...'}</div>
+              <div className="text-2xl font-bold">{presence === 1 ? 'Ada Orang' : presence === 0 ? 'Tidak Ada Orang' : 'Menunggu...'}</div>
               <p className="text-xs text-muted-foreground">Berdasarkan deteksi sensor</p>
             </CardContent>
           </Card>
