@@ -15,7 +15,7 @@ const DashboardPage = () => {
     connectionStatus,
     suhu,
     kelembapan,
-    presence,
+    presenceData,
     ledStatus,
     suhuHistory,
     kelembapanHistory 
@@ -81,8 +81,10 @@ const DashboardPage = () => {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{presence === 1 ? 'Ada Orang' : presence === 0 ? 'Tidak Ada Orang' : 'Menunggu...'}</div>
-              <p className="text-xs text-muted-foreground">Berdasarkan deteksi sensor</p>
+              <div className="text-2xl font-bold">{presenceData?.status || 'Menunggu...'}</div>
+              <p className="text-xs text-muted-foreground">
+                {presenceData?.count !== undefined ? `Jumlah orang: ${presenceData.count}` : 'Berdasarkan deteksi sensor'}
+              </p>
             </CardContent>
           </Card>
           <Card>
