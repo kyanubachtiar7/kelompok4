@@ -6,13 +6,13 @@ const VideoStream = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gesture Stream</CardTitle>
+        <CardTitle>Pose Stream</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="aspect-video rounded-md overflow-hidden">
           <iframe
             src={VIDEO_STREAM_URL}
-            title="Gesture Stream"
+            title="Pose Stream"
             className="w-full h-full border-0"
             allowFullScreen
           />

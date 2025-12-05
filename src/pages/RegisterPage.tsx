@@ -5,20 +5,25 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../context/AuthContext';
-import { showError } from '@/utils/toast';
+import { showSuccess, showError } from '@/utils/toast';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { register } = useAuth();
 
-  const handleLogin = () => {
-    const success = login(username, password);
+  const handleRegister = () => {
+    if (!username || !password) {
+      showError('Nama pengguna dan kata sandi tidak boleh kosong.');
+      return;
+    }
+    const success = register(username, password);
     if (success) {
-      navigate('/dashboard');
+      showSuccess('Pendaftaran berhasil! Silakan masuk.');
+      navigate('/login');
     } else {
-      showError('Nama pengguna atau kata sandi salah.');
+      showError('Nama pengguna sudah digunakan.');
     }
   };
 
@@ -26,8 +31,8 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>Masuk untuk mengakses dasbor IoT.</CardDescription>
+          <CardTitle className="text-2xl">Daftar Akun</CardTitle>
+          <CardDescription>Buat akun baru untuk mengakses dasbor.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
@@ -36,7 +41,6 @@ const LoginPage = () => {
               <Input
                 id="username"
                 type="text"
-                placeholder="kelompok4"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -47,19 +51,18 @@ const LoginPage = () => {
               <Input
                 id="password"
                 type="password"
-                placeholder="kelompok4"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <Button onClick={handleLogin} className="w-full">
-              Masuk
+            <Button onClick={handleRegister} className="w-full">
+              Daftar
             </Button>
             <div className="mt-4 text-center text-sm">
-              Belum punya akun?{' '}
-              <Link to="/register" className="underline">
-                Daftar
+              Sudah punya akun?{' '}
+              <Link to="/login" className="underline">
+                Masuk
               </Link>
             </div>
           </div>
@@ -69,4 +72,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
