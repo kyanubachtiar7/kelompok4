@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import mqtt, { MqttClient } from 'mqtt';
+import mqtt from 'mqtt';
 
 // Tipe untuk data riwayat
 interface HistoryData<T> {
@@ -23,7 +23,7 @@ interface MQTTContextState {
 const MQTTContext = createContext<MQTTContextState | undefined>(undefined);
 
 const MAX_HISTORY = 20;
-const MQTT_BROKER_URL = 'ws://localhost:1883'; // Gunakan ws:// untuk koneksi dari browser
+const MQTT_BROKER_URL = 'ws://localhost:9001'; // Diperbarui ke port WebSocket
 const TOPICS = ['kel4/il/suhu', 'kel4/il/kelembapan', 'kel4/il/presence', 'kel4/il/led'];
 
 // Helper function untuk memperbarui riwayat
@@ -49,7 +49,11 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
   const [ledHistory, setLedHistory] = useState<HistoryData<string>[]>([]);
 
   useEffect(() => {
-    const client = mqtt.connect(MQTT_BROKER_URL);
+    // Opsi koneksi diperbarui
+    const client = mqtt.connect(MQTT_BROKER_URL, {
+      clean: true,
+      reconnectPeriod: 1000,
+    });
 
     client.on('connect', () => {
       setConnectionStatus('Terhubung');
@@ -77,6 +81,9 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     client.on('message', (topic, payload) => {
       try {
         const message = JSON.parse(payload.toString());
+        // Menambahkan console.log untuk debugging
+        console.log(`Pesan diterima dari topik [${topic}]:`, message);
+        
         const value = message.value;
 
         switch (topic) {
