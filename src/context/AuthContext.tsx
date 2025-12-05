@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
 interface User {
   username: string;
@@ -15,7 +15,16 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Cek localStorage saat inisialisasi
+    try {
+      const storedAuth = localStorage.getItem('authStatus');
+      return storedAuth ? JSON.parse(storedAuth).isAuthenticated : false;
+    } catch {
+      return false;
+    }
+  });
+
   const [users, setUsers] = useState<User[]>([
     { username: 'kelompok4', password: 'kelompok4' }
   ]);
@@ -24,6 +33,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const user = users.find(u => u.username === username && u.password === pass);
     if (user) {
       setIsAuthenticated(true);
+      // Simpan status login ke localStorage
+      localStorage.setItem('authStatus', JSON.stringify({ isAuthenticated: true, username }));
       return true;
     }
     return false;
@@ -31,12 +42,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setIsAuthenticated(false);
+    // Hapus status login dari localStorage
+    localStorage.removeItem('authStatus');
   };
 
   const register = (username: string, pass: string) => {
     const userExists = users.some(u => u.username === username);
     if (userExists) {
-      return false; // Username already taken
+      return false; // Username sudah ada
     }
     setUsers(prevUsers => [...prevUsers, { username, password: pass }]);
     return true;
