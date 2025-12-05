@@ -7,6 +7,7 @@ import SuhuChart from '@/components/SuhuChart';
 import KelembapanChart from '@/components/KelembapanChart';
 import VideoStream from '@/components/VideoStream';
 import { useMQTT } from '../context/MQTTContext';
+import { Progress } from '@/components/ui/progress';
 
 const DashboardPage = () => {
   const { logout } = useAuth();
@@ -15,7 +16,7 @@ const DashboardPage = () => {
     connectionStatus,
     suhu,
     kelembapan,
-    presenceData,
+    presenceStatus,
     ledStatus,
     suhuHistory,
     kelembapanHistory 
@@ -36,6 +37,10 @@ const DashboardPage = () => {
   };
 
   const cardClasses = "bg-card/80 backdrop-blur-sm border border-primary/20";
+
+  // Menghitung nilai progres untuk gauge (0-100)
+  const suhuProgress = suhu !== undefined ? (suhu / 50) * 100 : 0; // Asumsi suhu maks 50°C
+  const kelembapanProgress = kelembapan !== undefined ? kelembapan : 0;
 
   return (
     <div className="min-h-screen p-4 md:p-8">
@@ -62,8 +67,8 @@ const DashboardPage = () => {
               <Thermometer className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{suhu !== undefined ? `${suhu}°C` : 'Menunggu...'}</div>
-              <p className="text-xs text-muted-foreground">Data real-time dari sensor</p>
+              <div className="text-2xl font-bold">{suhu !== undefined ? `${suhu.toFixed(1)}°C` : 'Menunggu...'}</div>
+              <Progress value={suhuProgress} className="h-2 mt-2" />
             </CardContent>
           </Card>
           <Card className={cardClasses}>
@@ -72,8 +77,8 @@ const DashboardPage = () => {
               <Droplets className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{kelembapan !== undefined ? `${kelembapan}%` : 'Menunggu...'}</div>
-              <p className="text-xs text-muted-foreground">Data real-time dari sensor</p>
+              <div className="text-2xl font-bold">{kelembapan !== undefined ? `${kelembapan.toFixed(1)}%` : 'Menunggu...'}</div>
+              <Progress value={kelembapanProgress} className="h-2 mt-2" />
             </CardContent>
           </Card>
           <Card className={cardClasses}>
@@ -82,9 +87,9 @@ const DashboardPage = () => {
               <Users className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{presenceData?.status || 'Menunggu...'}</div>
+              <div className="text-2xl font-bold">{presenceStatus || 'Menunggu...'}</div>
               <p className="text-xs text-muted-foreground">
-                {presenceData?.count !== undefined ? `Jumlah orang: ${presenceData.count}` : 'Berdasarkan deteksi sensor'}
+                Berdasarkan deteksi sensor
               </p>
             </CardContent>
           </Card>

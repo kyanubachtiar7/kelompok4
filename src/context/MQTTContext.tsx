@@ -7,30 +7,29 @@ interface HistoryData<T> {
   value: T;
 }
 
-// Tipe untuk data kehadiran dari JSON
-interface PresenceData {
-  presence: number;
-  count: number;
-  status: string;
-}
-
 // Tipe untuk state yang disediakan oleh context
 interface MQTTContextState {
   connectionStatus: string;
   suhu?: number;
   kelembapan?: number;
-  presenceData?: PresenceData;
+  presenceStatus?: string;
   ledStatus?: string;
   suhuHistory: HistoryData<number>[];
   kelembapanHistory: HistoryData<number>[];
-  presenceHistory: HistoryData<PresenceData>[];
+  presenceHistory: HistoryData<string>[];
   ledHistory: HistoryData<string>[];
 }
 
 const MQTTContext = createContext<MQTTContextState | undefined>(undefined);
 
 const MAX_HISTORY = 50;
-const MQTT_BROKER_URL = 'ws://localhost:9001';
+// Konfigurasi broker MQTT publik HiveMQ
+const MQTT_BROKER_URL = 'wss://broker.hivemq.com:8884/mqtt';
+const MQTT_OPTIONS = {
+  clientId: 'dyad-dashboard-kel4',
+  clean: true,
+  reconnectPeriod: 1000,
+};
 const TOPICS = ['kel4/il/suhu', 'kel4/il/kelembapan', 'kel4/il/presence', 'kel4/il/led'];
 
 // Helper function untuk memperbarui riwayat
@@ -47,19 +46,16 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
   const [connectionStatus, setConnectionStatus] = useState('Menghubungkan...');
   const [suhu, setSuhu] = useState<number | undefined>();
   const [kelembapan, setKelembapan] = useState<number | undefined>();
-  const [presenceData, setPresenceData] = useState<PresenceData | undefined>();
+  const [presenceStatus, setPresenceStatus] = useState<string | undefined>();
   const [ledStatus, setLedStatus] = useState<string | undefined>();
 
   const [suhuHistory, setSuhuHistory] = useState<HistoryData<number>[]>([]);
   const [kelembapanHistory, setKelembapanHistory] = useState<HistoryData<number>[]>([]);
-  const [presenceHistory, setPresenceHistory] = useState<HistoryData<PresenceData>[]>([]);
+  const [presenceHistory, setPresenceHistory] = useState<HistoryData<string>[]>([]);
   const [ledHistory, setLedHistory] = useState<HistoryData<string>[]>([]);
 
   useEffect(() => {
-    const client = mqtt.connect(MQTT_BROKER_URL, {
-      clean: true,
-      reconnectPeriod: 1000,
-    });
+    const client = mqtt.connect(MQTT_BROKER_URL, MQTT_OPTIONS);
 
     client.on('connect', () => {
       setConnectionStatus('Terhubung');
@@ -102,18 +98,15 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
           break;
         }
         case 'kel4/il/presence': {
-          try {
-            const data: PresenceData = JSON.parse(payloadString);
-            setPresenceData(data);
-            setPresenceHistory(prev => updateHistory(prev, data));
-          } catch (e) {
-            console.error('Gagal mem-parsing payload JSON untuk presence:', e);
-          }
+          const value = payloadString.trim();
+          const status = value === '1' ? 'ADA ORANG' : 'TIDAK ADA ORANG';
+          setPresenceStatus(status);
+          setPresenceHistory(prev => updateHistory(prev, status));
           break;
         }
         case 'kel4/il/led': {
-          const value = payloadString.toLowerCase();
-          const status = (value === '1' || value === 'on') ? 'ON' : 'OFF';
+          const value = payloadString.trim();
+          const status = value === '1' ? 'ON' : 'OFF';
           setLedStatus(status);
           setLedHistory(prev => updateHistory(prev, status));
           break;
@@ -134,7 +127,7 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     connectionStatus,
     suhu,
     kelembapan,
-    presenceData,
+    presenceStatus,
     ledStatus,
     suhuHistory,
     kelembapanHistory,
