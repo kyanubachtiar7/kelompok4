@@ -96,8 +96,12 @@ export default {
           },
         },
         "glow": {
-          "0%, 100%": { "box-shadow": "0 0 15px hsl(var(--primary) / 0.3), inset 0 0 5px hsl(var(--primary) / 0.2)" },
-          "50%": { "box-shadow": "0 0 25px hsl(var(--primary) / 0.5), inset 0 0 8px hsl(var(--primary) / 0.3)" }
+          "0%, 45%, 55%, 100%": { 
+            "box-shadow": "0 0 15px hsl(var(--primary) / 0.3), inset 0 0 5px hsl(var(--primary) / 0.2)" 
+          },
+          "50%": { 
+            "box-shadow": "0 0 25px hsl(var(--primary) / 0.5), inset 0 0 8px hsl(var(--primary) / 0.3)" 
+          }
         },
         "fade-in": {
           "from": { opacity: "0", transform: "translateY(5px)" },
