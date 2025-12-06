@@ -38,10 +38,10 @@ const DashboardPage = () => {
     return 'text-yellow-400';
   };
 
-  const cardClasses = "bg-slate-900/30 backdrop-blur-md border border-slate-700 rounded-xl shadow-lg transition-transform hover:scale-[1.02] hover:border-slate-500";
+  const cardClasses = "bg-black/50 backdrop-blur-sm border border-primary/30 rounded-2xl shadow-[0_0_20px_rgba(251,146,60,0.2)] transition-all hover:border-primary/60 hover:shadow-[0_0_30px_rgba(251,146,60,0.3)]";
 
   return (
-    <div className="min-h-screen bg-slate-900/80 text-slate-50 p-4 md:p-8 font-sans">
+    <div className="min-h-screen text-slate-50 p-4 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <div className="flex items-center space-x-4">
@@ -66,7 +66,7 @@ const DashboardPage = () => {
                 MQTT: {connectionStatus}
               </span>
             </div>
-            <Button onClick={handleLogout} variant="outline" className="bg-transparent border-slate-600 hover:bg-slate-800 hover:text-slate-100">
+            <Button onClick={handleLogout} variant="outline" className="border-primary/50 bg-primary/20 text-primary-foreground hover:bg-primary/30">
               Keluar
             </Button>
           </div>
@@ -76,13 +76,10 @@ const DashboardPage = () => {
           <Card className={cardClasses}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-300">Temperature</CardTitle>
-              <Thermometer className="h-5 w-5 text-slate-400" />
+              <Thermometer className="h-5 w-5 text-primary/80" />
             </CardHeader>
             <CardContent>
-              <div className={cn(
-                "text-4xl font-bold",
-                suhu === undefined ? 'text-slate-100' : suhu > 30 ? 'text-orange-400' : 'text-cyan-400'
-              )}>
+              <div className="text-4xl font-bold text-primary">
                 {suhu !== undefined ? `${suhu.toFixed(1)}°C` : '...'}
               </div>
             </CardContent>
@@ -90,7 +87,7 @@ const DashboardPage = () => {
           <Card className={cardClasses}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-300">Humidity</CardTitle>
-              <Droplets className="h-5 w-5 text-slate-400" />
+              <Droplets className="h-5 w-5 text-primary/80" />
             </CardHeader>
             <CardContent className="pt-2">
               <HumidityGauge value={kelembapan !== undefined ? kelembapan : 0} />

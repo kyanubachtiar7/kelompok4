@@ -23,8 +23,8 @@ const KelembapanChart = ({ data }: KelembapanChartProps) => {
       >
         <defs>
           <linearGradient id="colorKelembapan" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.8}/>
-            <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
+            <stop offset="5%" stopColor="#f97316" stopOpacity={0.8}/>
+            <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
           </linearGradient>
         </defs>
         <CartesianGrid stroke="hsl(var(--border))" strokeOpacity={0.1} />
@@ -38,12 +38,12 @@ const KelembapanChart = ({ data }: KelembapanChartProps) => {
             borderRadius: '0.5rem',
           }}
           labelStyle={{ color: '#e2e8f0' }}
-          itemStyle={{ color: '#22d3ee' }}
+          itemStyle={{ color: '#f97316' }}
         />
         <Area 
           type="monotone" 
           dataKey="kelembapan" 
-          stroke="#22d3ee" 
+          stroke="#f97316" 
           strokeWidth={2}
           fillOpacity={1} 
           fill="url(#colorKelembapan)" 

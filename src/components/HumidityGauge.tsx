@@ -27,7 +27,7 @@ const HumidityGauge = ({ value }: HumidityGaugeProps) => {
           background={{ fill: 'rgba(255, 255, 255, 0.1)' }}
           dataKey="value"
           angleAxisId={0}
-          fill="#22d3ee"
+          fill="hsl(var(--primary))"
           cornerRadius={5}
         />
         <text
@@ -35,7 +35,7 @@ const HumidityGauge = ({ value }: HumidityGaugeProps) => {
           y="55%"
           textAnchor="middle"
           dominantBaseline="middle"
-          className="fill-slate-50 text-2xl font-bold"
+          className="fill-primary text-2xl font-bold"
         >
           {`${value.toFixed(0)}%`}
         </text>
