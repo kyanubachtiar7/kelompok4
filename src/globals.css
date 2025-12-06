@@ -56,7 +56,7 @@
 
   body {
     @apply text-foreground;
-    background-image: url('/lava-background.png');
+    background-image: url('/tech-gradient-background.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
