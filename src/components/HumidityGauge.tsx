@@ -8,14 +8,14 @@ const HumidityGauge = ({ value }: HumidityGaugeProps) => {
   const data = [{ name: 'Humidity', value: value }];
 
   return (
-    <ResponsiveContainer width="100%" height={100}>
+    <ResponsiveContainer width="100%" height={120}>
       <RadialBarChart
         innerRadius="70%"
         outerRadius="100%"
         data={data}
         startAngle={180}
         endAngle={0}
-        barSize={10}
+        barSize={12}
       >
         <PolarAngleAxis
           type="number"
@@ -28,14 +28,14 @@ const HumidityGauge = ({ value }: HumidityGaugeProps) => {
           dataKey="value"
           angleAxisId={0}
           fill="hsl(var(--primary))"
-          cornerRadius={5}
+          cornerRadius={6}
         />
         <text
           x="50%"
-          y="55%"
+          y="50%"
           textAnchor="middle"
-          dominantBaseline="middle"
-          className="fill-primary text-2xl font-bold"
+          dominantBaseline="central"
+          className="fill-primary text-4xl font-bold"
         >
           {`${value.toFixed(0)}%`}
         </text>

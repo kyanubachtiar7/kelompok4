@@ -68,7 +68,13 @@ const DashboardPage = () => {
         {/* Hero Section: Video Feed */}
         <Card className={cn(cardClasses, "mb-8 relative overflow-hidden opacity-0 animate-fade-in")} style={{ animationDelay: '100ms' }}>
           <CardHeader>
-            <CardTitle className="text-slate-200">Tampilan Awal</CardTitle>
+            <CardTitle className="text-slate-200 flex items-center gap-2">
+              Video Stream
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+              </span>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="relative">
@@ -107,7 +113,7 @@ const DashboardPage = () => {
                   <CardTitle className="text-sm font-medium text-slate-300">Humidity</CardTitle>
                   <Droplets className="h-5 w-5 text-primary/80" />
                 </CardHeader>
-                <CardContent className="pt-2">
+                <CardContent className="pt-4">
                   <HumidityGauge value={kelembapan !== undefined ? kelembapan : 0} />
                 </CardContent>
               </Card>
