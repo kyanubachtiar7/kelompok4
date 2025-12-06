@@ -1,4 +1,4 @@
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface KelembapanData {
   name: string;
@@ -23,36 +23,31 @@ const KelembapanChart = ({ data }: KelembapanChartProps) => {
       >
         <defs>
           <linearGradient id="colorKelembapan" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
-            <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+            <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.8}/>
+            <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
           </linearGradient>
-          <filter id="shadowKelembapan" height="200%">
-            <feDropShadow dx="0" dy="5" stdDeviation="5" floodColor="#82ca9d" floodOpacity="0.3" />
-          </filter>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
+        <CartesianGrid stroke="hsl(var(--border))" strokeOpacity={0.1} />
         <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
         <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} />
         <Tooltip
           contentStyle={{
-            backgroundColor: 'hsl(var(--background) / 0.8)',
+            backgroundColor: 'rgba(15, 23, 42, 0.7)',
             borderColor: 'hsl(var(--border))',
             backdropFilter: 'blur(4px)',
-            borderRadius: 'var(--radius)',
+            borderRadius: '0.5rem',
           }}
-          labelStyle={{ color: 'hsl(var(--foreground))' }}
-          itemStyle={{ color: '#82ca9d' }}
+          labelStyle={{ color: '#e2e8f0' }}
+          itemStyle={{ color: '#22d3ee' }}
         />
-        <Legend wrapperStyle={{ fontSize: '14px' }} />
         <Area 
           type="monotone" 
           dataKey="kelembapan" 
-          stroke="#82ca9d" 
+          stroke="#22d3ee" 
           strokeWidth={2}
           fillOpacity={1} 
           fill="url(#colorKelembapan)" 
           name="Kelembapan (%)"
-          filter="url(#shadowKelembapan)"
         />
       </AreaChart>
     </ResponsiveContainer>
