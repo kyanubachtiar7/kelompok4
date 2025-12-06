@@ -24,7 +24,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-lg border border-primary/20 shadow-2xl shadow-primary/10 animate-fade-in animate-glow">
+      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-lg border border-primary/20 shadow-2xl shadow-primary/10 animate-fade-in animate-glow transition-transform duration-300 hover:scale-[1.02]">
         <CardHeader className="text-center">
           <img 
             src="/logo-polines.png" 

@@ -29,14 +29,27 @@ const RegisterPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-sm border border-primary/20">
-        <CardHeader>
-          <CardTitle className="text-2xl text-primary">Daftar Akun</CardTitle>
-          <CardDescription>Buat akun baru untuk mengakses dasbor.</CardDescription>
+      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-lg border border-primary/20 shadow-2xl shadow-primary/10 animate-fade-in animate-glow transition-transform duration-300 hover:scale-[1.02]">
+        <CardHeader className="text-center">
+          <CardTitle 
+            className="text-3xl font-bold text-slate-100 opacity-0 animate-fade-in"
+            style={{ animationDelay: '0.2s' }}
+          >
+            Daftar Akun
+          </CardTitle>
+          <CardDescription 
+            className="text-slate-400 pt-2 opacity-0 animate-fade-in"
+            style={{ animationDelay: '0.4s' }}
+          >
+            Buat akun baru untuk mengakses dasbor.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
+          <div className="grid gap-6">
+            <div 
+              className="grid gap-2 opacity-0 animate-fade-in"
+              style={{ animationDelay: '0.6s' }}
+            >
               <Label htmlFor="username">Nama Pengguna</Label>
               <Input
                 id="username"
@@ -44,9 +57,13 @@ const RegisterPage = () => {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                className="bg-secondary/50"
               />
             </div>
-            <div className="grid gap-2">
+            <div 
+              className="grid gap-2 opacity-0 animate-fade-in"
+              style={{ animationDelay: '0.8s' }}
+            >
               <Label htmlFor="password">Kata Sandi</Label>
               <Input
                 id="password"
@@ -54,14 +71,22 @@ const RegisterPage = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="bg-secondary/50"
               />
             </div>
-            <Button onClick={handleRegister} className="w-full">
+            <Button 
+              onClick={handleRegister} 
+              className="w-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-[0_0_15px_hsl(var(--primary)/0.5)] hover:shadow-[0_0_25px_hsl(var(--primary)/0.7)] opacity-0 animate-fade-in"
+              style={{ animationDelay: '1.0s' }}
+            >
               Daftar
             </Button>
-            <div className="mt-4 text-center text-sm">
+            <div 
+              className="mt-4 text-center text-sm text-muted-foreground opacity-0 animate-fade-in"
+              style={{ animationDelay: '1.2s' }}
+            >
               Sudah punya akun?{' '}
-              <Link to="/login" className="underline text-primary">
+              <Link to="/login" className="underline text-primary hover:text-primary/80">
                 Masuk
               </Link>
             </div>

@@ -38,7 +38,7 @@ const DashboardPage = () => {
     return 'text-yellow-400';
   };
 
-  const cardClasses = "bg-card/80 backdrop-blur-sm border border-primary/20 transition-all hover:border-primary/40";
+  const cardClasses = "bg-card/80 backdrop-blur-sm border border-primary/20 transition-all duration-300 ease-in-out hover:border-primary/40 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10";
 
   const formattedSuhuHistory = sensorHistory.map(d => ({ name: d.timestamp, suhu: d.suhu })).reverse();
   const formattedKelembapanHistory = sensorHistory.map(d => ({ name: d.timestamp, kelembapan: d.kelembapan })).reverse();
@@ -66,7 +66,7 @@ const DashboardPage = () => {
         </header>
         
         {/* Hero Section: Video Feed */}
-        <Card className={cn(cardClasses, "mb-8 relative overflow-hidden")}>
+        <Card className={cn(cardClasses, "mb-8 relative overflow-hidden opacity-0 animate-fade-in")} style={{ animationDelay: '100ms' }}>
           <CardHeader>
             <CardTitle className="text-slate-200">Tampilan Awal</CardTitle>
           </CardHeader>
@@ -91,7 +91,7 @@ const DashboardPage = () => {
           {/* Tab 1: Monitor Content */}
           <TabsContent value="monitor">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-6">
-              <Card className={cardClasses}>
+              <Card className={cn(cardClasses, "opacity-0 animate-fade-in")} style={{ animationDelay: '200ms' }}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-slate-300">Temperature</CardTitle>
                   <Thermometer className="h-5 w-5 text-primary/80" />
@@ -102,7 +102,7 @@ const DashboardPage = () => {
                   </div>
                 </CardContent>
               </Card>
-              <Card className={cardClasses}>
+              <Card className={cn(cardClasses, "opacity-0 animate-fade-in")} style={{ animationDelay: '300ms' }}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-slate-300">Humidity</CardTitle>
                   <Droplets className="h-5 w-5 text-primary/80" />
@@ -111,7 +111,7 @@ const DashboardPage = () => {
                   <HumidityGauge value={kelembapan !== undefined ? kelembapan : 0} />
                 </CardContent>
               </Card>
-              <Card className={cardClasses}>
+              <Card className={cn(cardClasses, "opacity-0 animate-fade-in")} style={{ animationDelay: '400ms' }}>
                 <CardHeader><CardTitle className="text-sm font-medium text-slate-300">Presence (PIR)</CardTitle></CardHeader>
                 <CardContent>
                   <div className={cn("text-xl font-bold", presenceStatus === 'ADA ORANG' ? 'text-green-400' : 'text-gray-500')}>
@@ -119,7 +119,7 @@ const DashboardPage = () => {
                   </div>
                 </CardContent>
               </Card>
-              <Card className={cardClasses}>
+              <Card className={cn(cardClasses, "opacity-0 animate-fade-in")} style={{ animationDelay: '500ms' }}>
                 <CardHeader><CardTitle className="text-sm font-medium text-slate-300">LED Status</CardTitle></CardHeader>
                 <CardContent>
                   <div className={cn("text-xl font-bold", ledStatus === 'LED MENYALA' ? 'text-yellow-300' : 'text-gray-500')}>
@@ -127,7 +127,7 @@ const DashboardPage = () => {
                   </div>
                 </CardContent>
               </Card>
-              <Card className={cardClasses}>
+              <Card className={cn(cardClasses, "opacity-0 animate-fade-in")} style={{ animationDelay: '600ms' }}>
                 <CardHeader><CardTitle className="text-sm font-medium text-slate-300">Buzzer Status</CardTitle></CardHeader>
                 <CardContent>
                   <div className={cn("text-xl font-bold", buzzerStatus === 'BUZZER MENYALA' ? 'text-red-500' : 'text-gray-500')}>
@@ -137,14 +137,14 @@ const DashboardPage = () => {
               </Card>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className={cardClasses}><CardHeader><CardTitle>Real-time Suhu</CardTitle></CardHeader><CardContent><SuhuChart data={formattedSuhuHistory} /></CardContent></Card>
-              <Card className={cardClasses}><CardHeader><CardTitle>Real-time Kelembapan</CardTitle></CardHeader><CardContent><KelembapanChart data={formattedKelembapanHistory} /></CardContent></Card>
+              <Card className={cn(cardClasses, "opacity-0 animate-fade-in")} style={{ animationDelay: '700ms' }}><CardHeader><CardTitle>Real-time Suhu</CardTitle></CardHeader><CardContent><SuhuChart data={formattedSuhuHistory} /></CardContent></Card>
+              <Card className={cn(cardClasses, "opacity-0 animate-fade-in")} style={{ animationDelay: '800ms' }}><CardHeader><CardTitle>Real-time Kelembapan</CardTitle></CardHeader><CardContent><KelembapanChart data={formattedKelembapanHistory} /></CardContent></Card>
             </div>
           </TabsContent>
 
           {/* Tab 2: Data Logs Content */}
           <TabsContent value="data-logs">
-            <Card className={cardClasses}>
+            <Card className={cn(cardClasses, "opacity-0 animate-fade-in")}>
               <CardHeader><CardTitle>Sensor Data Log</CardTitle></CardHeader>
               <CardContent>
                 <DataLogsTab logs={sensorHistory} resetLogs={resetSensorHistory} />
