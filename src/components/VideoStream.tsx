@@ -1,11 +1,10 @@
 import React from 'react';
-import { Card } from './ui/card';
 import { Skeleton } from './ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Terminal } from 'lucide-react';
 
 const VideoStream = () => {
-  const streamUrl = 'http://127.0.0.1:5000/';
+  const streamUrl = 'https://kodak-classroom-lightning-consistency.trycloudflare.com/video';
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -15,7 +14,7 @@ const VideoStream = () => {
 
   const handleError = () => {
     setIsLoading(false);
-    setError('Gagal memuat stream video. Pastikan server di http://127.0.0.1:5000/ berjalan dan dapat diakses.');
+    setError(`Gagal memuat stream video. Pastikan server di ${streamUrl} berjalan dan dapat diakses.`);
   };
 
   // Set timeout untuk error jika stream tidak kunjung termuat
@@ -24,13 +23,13 @@ const VideoStream = () => {
       if (isLoading) {
         handleError();
       }
-    }, 10000); // 10 detik timeout
+    }, 15000); // 15 detik timeout
 
     return () => clearTimeout(timer);
   }, [isLoading]);
 
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+    <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
       {isLoading && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-background">
           <Skeleton className="h-full w-full" />
@@ -46,11 +45,10 @@ const VideoStream = () => {
           </Alert>
         </div>
       )}
-      <iframe
+      <img
         src={streamUrl}
-        title="Pose Stream"
-        className={`h-full w-full border-0 ${isLoading || error ? 'hidden' : 'block'}`}
-        allow="camera; microphone"
+        alt="Pose Stream"
+        className={`h-full w-full object-contain ${isLoading || error ? 'hidden' : 'block'}`}
         onLoad={handleLoad}
         onError={handleError}
       />
