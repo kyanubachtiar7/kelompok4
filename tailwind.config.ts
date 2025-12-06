@@ -108,7 +108,7 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-green": "pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "glow": "glow 15s ease-in-out infinite",
+        "glow": "glow 30s ease-in-out infinite",
         "fade-in": "fade-in 0.4s ease-out forwards",
       },
     },
