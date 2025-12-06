@@ -45,7 +45,6 @@ const DashboardPage = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <div className="flex items-center space-x-4">
-            <img src="/smart-fan.png" alt="Smart Fan" className="h-20" />
             <h1 className="text-3xl font-bold text-slate-100 tracking-wider">
               SmartFan Control
             </h1>
