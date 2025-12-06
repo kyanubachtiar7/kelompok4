@@ -24,14 +24,33 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-lg border border-primary/20 shadow-2xl shadow-primary/10">
+      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-lg border border-primary/20 shadow-2xl shadow-primary/10 animate-fade-in animate-glow">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-slate-100">SmartFan Login</CardTitle>
-          <CardDescription className="text-slate-400 pt-2">Enter your credentials to access the system</CardDescription>
+          <img 
+            src="/logo-polines.png" 
+            alt="Logo Politeknik Negeri Semarang" 
+            className="w-24 h-24 mx-auto mb-4 opacity-0 animate-fade-in"
+            style={{ animationDelay: '0.2s' }}
+          />
+          <CardTitle 
+            className="text-3xl font-bold text-slate-100 opacity-0 animate-fade-in"
+            style={{ animationDelay: '0.4s' }}
+          >
+            SmartFan Login
+          </CardTitle>
+          <CardDescription 
+            className="text-slate-400 pt-2 opacity-0 animate-fade-in"
+            style={{ animationDelay: '0.6s' }}
+          >
+            Enter your credentials to access the system
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-6">
-            <div className="grid gap-2">
+            <div 
+              className="grid gap-2 opacity-0 animate-fade-in"
+              style={{ animationDelay: '0.8s' }}
+            >
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
@@ -43,7 +62,10 @@ const LoginPage = () => {
                 className="bg-secondary/50"
               />
             </div>
-            <div className="grid gap-2">
+            <div 
+              className="grid gap-2 opacity-0 animate-fade-in"
+              style={{ animationDelay: '1.0s' }}
+            >
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
@@ -57,11 +79,15 @@ const LoginPage = () => {
             </div>
             <Button 
               onClick={handleLogin} 
-              className="w-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-[0_0_15px_hsl(var(--primary)/0.5)] hover:shadow-[0_0_25px_hsl(var(--primary)/0.7)]"
+              className="w-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-[0_0_15px_hsl(var(--primary)/0.5)] hover:shadow-[0_0_25px_hsl(var(--primary)/0.7)] opacity-0 animate-fade-in"
+              style={{ animationDelay: '1.2s' }}
             >
               Connect to System
             </Button>
-            <div className="mt-4 text-center text-sm text-muted-foreground">
+            <div 
+              className="mt-4 text-center text-sm text-muted-foreground opacity-0 animate-fade-in"
+              style={{ animationDelay: '1.4s' }}
+            >
               Belum punya akun?{' '}
               <Link to="/register" className="underline text-primary hover:text-primary/80">
                 Daftar di sini
