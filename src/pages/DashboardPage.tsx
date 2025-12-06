@@ -113,7 +113,7 @@ const DashboardPage = () => {
                   <CardTitle className="text-sm font-medium text-slate-300">Humidity</CardTitle>
                   <Droplets className="h-5 w-5 text-primary/80" />
                 </CardHeader>
-                <CardContent className="pt-4">
+                <CardContent>
                   <HumidityGauge value={kelembapan !== undefined ? kelembapan : 0} />
                 </CardContent>
               </Card>
