@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Terminal } from 'lucide-react';
 
 const VideoStream = () => {
-  const streamUrl = 'https://kodak-classroom-lightning-consistency.trycloudflare.com/video';
+  const streamUrl = 'https://kamera.kyanu.my.id/video';
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
