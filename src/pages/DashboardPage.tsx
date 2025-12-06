@@ -3,8 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '../context/AuthContext';
 import { Thermometer, Droplets, Users, Lightbulb, Bell, User as UserIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import SuhuChart from '@/components/SuhuChart';
-import KelembapanChart from '@/components/KelembapanChart';
 import VideoStream from '@/components/VideoStream';
 import { useMQTT } from '../context/MQTTContext';
 import { cn } from '@/lib/utils';
@@ -23,18 +21,13 @@ const DashboardPage = () => {
     presenceStatus,
     ledStatus,
     buzzerStatus,
-    suhuHistory,
-    kelembapanHistory,
-    eventHistory
+    sensorHistory
   } = useMQTT();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
-
-  const formattedSuhuHistory = suhuHistory.map(d => ({ name: d.timestamp, suhu: d.value })).reverse();
-  const formattedKelembapanHistory = kelembapanHistory.map(d => ({ name: d.timestamp, kelembapan: d.value })).reverse();
 
   const getStatusColor = (status: string) => {
     if (status === 'Terhubung') return 'text-green-400';
@@ -137,18 +130,14 @@ const DashboardPage = () => {
                 </CardContent>
               </Card>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className={cardClasses}><CardHeader><CardTitle>Temperature History</CardTitle></CardHeader><CardContent><SuhuChart data={formattedSuhuHistory} /></CardContent></Card>
-              <Card className={cardClasses}><CardHeader><CardTitle>Humidity History</CardTitle></CardHeader><CardContent><KelembapanChart data={formattedKelembapanHistory} /></CardContent></Card>
-            </div>
           </TabsContent>
 
           {/* Tab 2: Data Logs Content */}
           <TabsContent value="data-logs">
             <Card className={cardClasses}>
-              <CardHeader><CardTitle>System Event Logs</CardTitle></CardHeader>
+              <CardHeader><CardTitle>Sensor Data Log</CardTitle></CardHeader>
               <CardContent>
-                <DataLogsTab logs={eventHistory} />
+                <DataLogsTab logs={sensorHistory} />
               </CardContent>
             </Card>
           </TabsContent>

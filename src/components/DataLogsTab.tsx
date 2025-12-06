@@ -1,22 +1,14 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 
-interface EventLog {
+interface SensorLog {
   timestamp: string;
-  event: string;
-  value: string | number;
-  status: string;
+  suhu: number;
+  kelembapan: number;
 }
 
 interface DataLogsTabProps {
-  logs: EventLog[];
+  logs: SensorLog[];
 }
-
-const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
-  if (status.toLowerCase().includes("high") || status.toLowerCase().includes("active")) return "destructive";
-  if (status.toLowerCase().includes("update")) return "secondary";
-  return "default";
-};
 
 const DataLogsTab = ({ logs }: DataLogsTabProps) => {
   return (
@@ -24,28 +16,26 @@ const DataLogsTab = ({ logs }: DataLogsTabProps) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[150px]">Timestamp</TableHead>
-            <TableHead>Event Type</TableHead>
-            <TableHead>Value</TableHead>
-            <TableHead className="text-right">Status</TableHead>
+            <TableHead className="w-[80px]">No</TableHead>
+            <TableHead className="w-[150px]">Jam</TableHead>
+            <TableHead>Data Suhu (°C)</TableHead>
+            <TableHead className="text-right">Data Kelembapan (%)</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {logs.length > 0 ? (
             logs.map((log, index) => (
               <TableRow key={index} className="bg-transparent even:bg-white/5">
-                <TableCell className="font-medium">{log.timestamp}</TableCell>
-                <TableCell>{log.event}</TableCell>
-                <TableCell>{log.value}</TableCell>
-                <TableCell className="text-right">
-                  <Badge variant={getStatusVariant(log.status)}>{log.status}</Badge>
-                </TableCell>
+                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell>{log.timestamp}</TableCell>
+                <TableCell>{log.suhu.toFixed(1)}</TableCell>
+                <TableCell className="text-right">{log.kelembapan.toFixed(0)}</TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
               <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                No data logs available.
+                Menunggu data dari sensor...
               </TableCell>
             </TableRow>
           )}
