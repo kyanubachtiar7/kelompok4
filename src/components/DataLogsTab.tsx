@@ -1,6 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface EventLog {
   timestamp: string;
@@ -21,7 +20,7 @@ const getStatusVariant = (status: string): "default" | "secondary" | "destructiv
 
 const DataLogsTab = ({ logs }: DataLogsTabProps) => {
   return (
-    <ScrollArea className="h-[400px] rounded-md border border-border">
+    <div className="rounded-md border border-border">
       <Table>
         <TableHeader>
           <TableRow>
@@ -45,14 +44,14 @@ const DataLogsTab = ({ logs }: DataLogsTabProps) => {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={4} className="text-center text-muted-foreground">
+              <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                 No data logs available.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-    </ScrollArea>
+    </div>
   );
 };
 

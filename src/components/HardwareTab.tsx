@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Cpu, Thermometer, Eye, ToggleRight, Bell, Camera } from "lucide-react";
+import { Cpu, Thermometer, ToggleRight, Bell, Camera } from "lucide-react";
 
 const hardwareComponents = [
   {
@@ -11,11 +11,6 @@ const hardwareComponents = [
     name: "DHT11/DHT22 Sensor",
     description: "Measures ambient temperature and humidity in real-time.",
     icon: <Thermometer className="w-8 h-8 text-primary" />,
-  },
-  {
-    name: "PIR Sensor",
-    description: "Detects motion and presence in the room.",
-    icon: <Eye className="w-8 h-8 text-primary" />,
   },
   {
     name: "Relay Module",

@@ -16,7 +16,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    // Cek localStorage saat inisialisasi
     try {
       const storedAuth = localStorage.getItem('authStatus');
       return storedAuth ? JSON.parse(storedAuth).isAuthenticated : false;
@@ -25,15 +24,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   });
 
-  const [users, setUsers] = useState<User[]>([
-    { username: 'kelompok4', password: 'kelompok4' }
-  ]);
+  const [users, setUsers] = useState<User[]>(() => {
+    try {
+      const storedUsers = localStorage.getItem('appUsers');
+      if (storedUsers) {
+        return JSON.parse(storedUsers);
+      }
+    } catch (e) {
+      console.error("Gagal memuat pengguna dari localStorage", e);
+    }
+    return [{ username: 'kelompok4', password: 'kelompok4' }];
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('appUsers', JSON.stringify(users));
+    } catch (e) {
+      console.error("Gagal menyimpan pengguna ke localStorage", e);
+    }
+  }, [users]);
 
   const login = (username: string, pass: string) => {
     const user = users.find(u => u.username === username && u.password === pass);
     if (user) {
       setIsAuthenticated(true);
-      // Simpan status login ke localStorage
       localStorage.setItem('authStatus', JSON.stringify({ isAuthenticated: true, username }));
       return true;
     }
@@ -42,7 +56,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setIsAuthenticated(false);
-    // Hapus status login dari localStorage
     localStorage.removeItem('authStatus');
   };
 

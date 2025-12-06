@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -61,6 +61,12 @@ const LoginPage = () => {
             >
               Connect to System
             </Button>
+            <div className="mt-4 text-center text-sm text-muted-foreground">
+              Belum punya akun?{' '}
+              <Link to="/register" className="underline text-primary hover:text-primary/80">
+                Daftar di sini
+              </Link>
+            </div>
           </div>
         </CardContent>
       </Card>

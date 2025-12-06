@@ -60,7 +60,7 @@ const DashboardPage = () => {
               </span>
             </div>
             <UserIcon className="h-6 w-6 text-slate-400" />
-            <Button onClick={handleLogout} variant="outline" className="border-primary/50 bg-transparent text-primary-foreground hover:bg-primary/20">
+            <Button onClick={handleLogout} variant="outline" className="border-primary/50 bg-transparent text-slate-100 hover:bg-primary/20">
               Logout
             </Button>
           </div>
