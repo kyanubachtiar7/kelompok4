@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import mqtt from 'mqtt';
 
 // Tipe untuk data riwayat sensor
@@ -22,6 +22,7 @@ interface MQTTContextState {
 const MQTTContext = createContext<MQTTContextState | undefined>(undefined);
 
 const MAX_HISTORY = 50;
+const UPDATE_INTERVAL = 5000; // 5 detik dalam milidetik
 const MQTT_BROKER_URL = 'wss://55ad080716e4440ca9ccdd6a9f124730.s1.eu.hivemq.cloud:8884/mqtt';
 const SENSOR_TOPIC = 'kel4/il/dyad/state';
 
@@ -33,6 +34,7 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
   const [ledStatus, setLedStatus] = useState<string | undefined>();
   const [buzzerStatus, setBuzzerStatus] = useState<string | undefined>();
   const [sensorHistory, setSensorHistory] = useState<SensorHistory[]>([]);
+  const lastUpdateTime = useRef(0);
 
   useEffect(() => {
     const clientId = `web_dashboard_${Date.now()}_${Math.random().toString(16).substring(2, 8)}`;
@@ -61,6 +63,12 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     });
 
     client.on('message', (topic, payload) => {
+      const now = Date.now();
+      if (now - lastUpdateTime.current < UPDATE_INTERVAL) {
+        return; // Abaikan pesan jika belum 5 detik
+      }
+      lastUpdateTime.current = now;
+
       try {
         const data = JSON.parse(payload.toString());
 
