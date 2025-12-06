@@ -25,13 +25,8 @@ interface MQTTContextState {
 const MQTTContext = createContext<MQTTContextState | undefined>(undefined);
 
 const MAX_HISTORY = 50;
-// Konfigurasi broker MQTT publik HiveMQ
+// Konfigurasi broker MQTT publik HiveMQ menggunakan WebSockets
 const MQTT_BROKER_URL = 'wss://broker.hivemq.com:8884/mqtt';
-const MQTT_OPTIONS = {
-  clientId: 'dyad-dashboard-kel4-presence', // Client ID sedikit diubah untuk menghindari konflik
-  clean: true,
-  reconnectPeriod: 1000,
-};
 const SENSOR_TOPIC = 'kel4/il/dyad/state';
 
 // Helper function untuk memperbarui riwayat
@@ -61,11 +56,23 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
   const [buzzerHistory, setBuzzerHistory] = useState<HistoryData<string>[]>([]);
 
   useEffect(() => {
+    // 1. Membuat Client ID Dinamis untuk mencegah konflik
+    const clientId = `web_client_${Date.now()}_${Math.random().toString(16).substring(2, 8)}`;
+
+    // 2. Opsi koneksi yang disempurnakan
+    const MQTT_OPTIONS: mqtt.IClientOptions = {
+      clientId,
+      clean: true, // Clean session
+      keepalive: 60, // Keep-alive 60 detik
+      reconnectPeriod: 5000, // Coba sambung ulang setiap 5 detik
+    };
+
     const client = mqtt.connect(MQTT_BROKER_URL, MQTT_OPTIONS);
 
     client.on('connect', () => {
       setConnectionStatus('Terhubung');
-      client.subscribe(SENSOR_TOPIC, (err) => {
+      // 3. Subscribe ke topik dengan QoS 1 setelah terhubung (atau terhubung kembali)
+      client.subscribe(SENSOR_TOPIC, { qos: 1 }, (err) => {
         if (err) {
           console.error('Gagal subscribe ke topik:', err);
         } else {
@@ -74,12 +81,13 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
       });
     });
 
+    // 4. Memperbarui status UI secara real-time
     client.on('reconnect', () => setConnectionStatus('Menghubungkan...'));
     client.on('close', () => setConnectionStatus('Terputus'));
     client.on('error', (err) => {
       console.error('Koneksi MQTT Error:', err);
       setConnectionStatus('Error');
-      client.end();
+      client.end(); // Hentikan percobaan jika ada error fatal
     });
 
     client.on('message', (topic, payload) => {
@@ -118,6 +126,7 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
       }
     });
 
+    // Cleanup saat komponen di-unmount
     return () => {
       if (client) {
         client.end();
