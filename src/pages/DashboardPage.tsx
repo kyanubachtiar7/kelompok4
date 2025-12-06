@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '../context/AuthContext';
-import { Thermometer, Droplets, Users, Lightbulb, Bell } from 'lucide-react';
+import { Thermometer, Droplets, Users, Lightbulb, Bell, User as UserIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SuhuChart from '@/components/SuhuChart';
 import KelembapanChart from '@/components/KelembapanChart';
@@ -9,6 +9,9 @@ import VideoStream from '@/components/VideoStream';
 import { useMQTT } from '../context/MQTTContext';
 import { cn } from '@/lib/utils';
 import HumidityGauge from '@/components/HumidityGauge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import DataLogsTab from '@/components/DataLogsTab';
+import HardwareTab from '@/components/HardwareTab';
 
 const DashboardPage = () => {
   const { logout } = useAuth();
@@ -21,7 +24,8 @@ const DashboardPage = () => {
     ledStatus,
     buzzerStatus,
     suhuHistory,
-    kelembapanHistory 
+    kelembapanHistory,
+    eventHistory
   } = useMQTT();
 
   const handleLogout = () => {
@@ -38,139 +42,122 @@ const DashboardPage = () => {
     return 'text-yellow-400';
   };
 
-  const cardClasses = "bg-card backdrop-blur-sm border border-primary/30 rounded-2xl shadow-[0_0_20px_hsl(var(--primary)/0.2)] transition-all hover:border-primary/60 hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] animate-glow";
+  const cardClasses = "bg-card/80 backdrop-blur-sm border border-primary/20 transition-all hover:border-primary/40";
 
   return (
     <div className="min-h-screen text-slate-50 p-4 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+        {/* Header */}
+        <header className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-slate-100 tracking-wider">
+            SmartFan Control
+          </h1>
           <div className="flex items-center space-x-4">
-            <h1 className="text-3xl font-bold text-slate-100 tracking-wider">
-              SmartFan Control
-            </h1>
-          </div>
-          <div className="flex items-center space-x-4 mt-4 md:mt-0">
             <div className="flex items-center space-x-2 text-sm">
-              <span className="relative flex h-3 w-3">
-                <span className={cn(
-                  "animate-pulse-green absolute inline-flex h-full w-full rounded-full opacity-75",
-                  connectionStatus === 'Terhubung' ? 'bg-green-400' : 'bg-red-400'
-                )}></span>
-                <span className={cn(
-                  "relative inline-flex rounded-full h-3 w-3",
-                  connectionStatus === 'Terhubung' ? 'bg-green-500' : 'bg-red-500'
-                )}></span>
-              </span>
+              <span className={cn("h-2 w-2 rounded-full", connectionStatus === 'Terhubung' ? 'bg-green-500 animate-pulse' : 'bg-red-500')}></span>
               <span className={getStatusColor(connectionStatus)}>
                 MQTT: {connectionStatus}
               </span>
             </div>
-            <Button onClick={handleLogout} variant="outline" className="border-primary/50 bg-primary/20 text-primary-foreground hover:bg-primary/30">
-              Keluar
+            <UserIcon className="h-6 w-6 text-slate-400" />
+            <Button onClick={handleLogout} variant="outline" className="border-primary/50 bg-transparent text-primary-foreground hover:bg-primary/20">
+              Logout
             </Button>
           </div>
-        </div>
+        </header>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-6">
-          <Card className={cardClasses}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-300">Temperature</CardTitle>
-              <Thermometer className="h-5 w-5 text-primary/80" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-4xl font-bold text-primary">
-                {suhu !== undefined ? `${suhu.toFixed(1)}°C` : '...'}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className={cardClasses}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-300">Humidity</CardTitle>
-              <Droplets className="h-5 w-5 text-primary/80" />
-            </CardHeader>
-            <CardContent className="pt-2">
-              <HumidityGauge value={kelembapan !== undefined ? kelembapan : 0} />
-            </CardContent>
-          </Card>
-          <Card className={cardClasses}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-300">Presence (PIR)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-4">
-                <Users className={cn(
-                  "h-8 w-8 transition-all",
-                  presenceStatus === 'ADA ORANG' ? 'text-cyan-400 drop-shadow-[0_0_5px_#22d3ee]' : 'text-gray-500'
-                )} />
-                <div className={cn(
-                  "text-2xl font-bold",
-                  presenceStatus === 'ADA ORANG' ? 'text-cyan-400' : 'text-gray-500'
-                )}>
-                  {presenceStatus === 'ADA ORANG' ? 'Active' : 'Inactive'}
-                </div>
-              </div>
-              <p className="text-xs text-slate-400 mt-2">Motion Sensor Status</p>
-            </CardContent>
-          </Card>
-          <Card className={cardClasses}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-300">LED Status</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-4">
-                <Lightbulb className={cn(
-                  "h-8 w-8 transition-all",
-                  ledStatus === 'LED MENYALA' ? 'text-pink-400 drop-shadow-[0_0_8px_#f472b6]' : 'text-gray-500'
-                )} />
-                <div className={cn(
-                  "text-2xl font-bold",
-                  ledStatus === 'LED MENYALA' ? 'text-pink-400' : 'text-gray-500'
-                )}>
-                  {ledStatus === 'LED MENYALA' ? 'ON' : 'OFF'}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className={cardClasses}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-300">Buzzer Status</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-4">
-                <Bell className={cn(
-                  "h-8 w-8 transition-all",
-                  buzzerStatus === 'BUZZER MENYALA' ? 'text-red-500 drop-shadow-[0_0_8px_#ef4444] animate-pulse' : 'text-gray-500'
-                )} />
-                <div className={cn(
-                  "text-2xl font-bold",
-                  buzzerStatus === 'BUZZER MENYALA' ? 'text-red-500' : 'text-gray-500'
-                )}>
-                  {buzzerStatus === 'BUZZER MENYALA' ? 'ON' : 'OFF'}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <Card className={cardClasses}>
-            <CardHeader><CardTitle className="text-slate-200">Temperature History</CardTitle></CardHeader>
-            <CardContent><SuhuChart data={formattedSuhuHistory} /></CardContent>
-          </Card>
-          <Card className={cardClasses}>
-            <CardHeader><CardTitle className="text-slate-200">Humidity History</CardTitle></CardHeader>
-            <CardContent><KelembapanChart data={formattedKelembapanHistory} /></CardContent>
-          </Card>
-        </div>
-
-        <Card className={cn(cardClasses, "overflow-hidden")}>
+        {/* Hero Section: Video Feed */}
+        <Card className={cn(cardClasses, "mb-8 relative overflow-hidden")}>
           <CardHeader>
-            <CardTitle className="text-slate-200">Live Feed</CardTitle>
+            <CardTitle className="text-slate-200">Tampilan Awal</CardTitle>
           </CardHeader>
           <CardContent>
-            <VideoStream />
+            <div className="relative">
+              <VideoStream />
+              <div className="absolute top-2 left-2 bg-black/50 text-white px-3 py-1 rounded-lg text-sm font-semibold">
+                LIVE POSE TRACKING
+              </div>
+            </div>
           </CardContent>
         </Card>
+
+        {/* Navigation Tabs */}
+        <Tabs defaultValue="monitor" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 bg-secondary/50 mb-6">
+            <TabsTrigger value="monitor">Monitor</TabsTrigger>
+            <TabsTrigger value="data-logs">Data Logs</TabsTrigger>
+            <TabsTrigger value="hardware">Hardware</TabsTrigger>
+          </TabsList>
+
+          {/* Tab 1: Monitor Content */}
+          <TabsContent value="monitor">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-6">
+              <Card className={cardClasses}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-slate-300">Temperature</CardTitle>
+                  <Thermometer className="h-5 w-5 text-primary/80" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-4xl font-bold text-primary">
+                    {suhu !== undefined ? `${suhu.toFixed(1)}°C` : '...'}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className={cardClasses}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-slate-300">Humidity</CardTitle>
+                  <Droplets className="h-5 w-5 text-primary/80" />
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <HumidityGauge value={kelembapan !== undefined ? kelembapan : 0} />
+                </CardContent>
+              </Card>
+              <Card className={cardClasses}>
+                <CardHeader><CardTitle className="text-sm font-medium text-slate-300">Presence (PIR)</CardTitle></CardHeader>
+                <CardContent>
+                  <div className={cn("text-xl font-bold", presenceStatus === 'ADA ORANG' ? 'text-green-400' : 'text-gray-500')}>
+                    {presenceStatus === 'ADA ORANG' ? 'Active' : 'Inactive'}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className={cardClasses}>
+                <CardHeader><CardTitle className="text-sm font-medium text-slate-300">LED Status</CardTitle></CardHeader>
+                <CardContent>
+                  <div className={cn("text-xl font-bold", ledStatus === 'LED MENYALA' ? 'text-yellow-300' : 'text-gray-500')}>
+                    {ledStatus === 'LED MENYALA' ? 'ON' : 'OFF'}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className={cardClasses}>
+                <CardHeader><CardTitle className="text-sm font-medium text-slate-300">Buzzer Status</CardTitle></CardHeader>
+                <CardContent>
+                  <div className={cn("text-xl font-bold", buzzerStatus === 'BUZZER MENYALA' ? 'text-red-500' : 'text-gray-500')}>
+                    {buzzerStatus === 'BUZZER MENYALA' ? 'ON' : 'OFF'}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className={cardClasses}><CardHeader><CardTitle>Temperature History</CardTitle></CardHeader><CardContent><SuhuChart data={formattedSuhuHistory} /></CardContent></Card>
+              <Card className={cardClasses}><CardHeader><CardTitle>Humidity History</CardTitle></CardHeader><CardContent><KelembapanChart data={formattedKelembapanHistory} /></CardContent></Card>
+            </div>
+          </TabsContent>
+
+          {/* Tab 2: Data Logs Content */}
+          <TabsContent value="data-logs">
+            <Card className={cardClasses}>
+              <CardHeader><CardTitle>System Event Logs</CardTitle></CardHeader>
+              <CardContent>
+                <DataLogsTab logs={eventHistory} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Tab 3: Hardware Content */}
+          <TabsContent value="hardware">
+            <HardwareTab />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

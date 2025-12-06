@@ -27,25 +27,25 @@
   }
 
   .dark {
-    --background: 240 10% 4%;
+    --background: 224 71% 4%; /* Midnight Blue */
     --foreground: 210 40% 98%;
-    --card: 240 10% 10% / 0.6;
+    --card: 224 71% 10% / 0.6; /* Glassmorphism Card */
     --card-foreground: 210 40% 98%;
-    --popover: 240 10% 4%;
+    --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 260 100% 70%; /* Vibrant Violet */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 240 4% 14%;
+    --primary: 180 100% 50%; /* Neon Cyan */
+    --primary-foreground: 224 71% 4%;
+    --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 240 4% 14%;
+    --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
-    --accent: 240 4% 14%;
+    --accent: 217 33% 17%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
-    --border: 260 100% 70% / 0.2;
-    --input: 240 4% 14%;
-    --ring: 260 100% 70%;
+    --border: 180 100% 50% / 0.2; /* Neon Cyan Border */
+    --input: 217 33% 17%;
+    --ring: 180 100% 50%;
   }
 }
 

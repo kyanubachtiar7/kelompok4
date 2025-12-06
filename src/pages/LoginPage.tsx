@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,26 +18,21 @@ const LoginPage = () => {
     if (success) {
       navigate('/dashboard');
     } else {
-      showError('Nama pengguna atau kata sandi salah.');
+      showError('Invalid username or password.');
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-sm border border-primary/20">
-        <CardHeader className="items-center text-center">
-          <img 
-            src="/logo-polines.png" 
-            alt="Logo Politeknik Negeri Semarang" 
-            className="w-24 h-24 mb-4" 
-          />
-          <CardTitle className="text-2xl text-primary">Login</CardTitle>
-          <CardDescription>Masuk untuk mengakses dasbor IoT.</CardDescription>
+      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-lg border border-primary/20 shadow-2xl shadow-primary/10">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-bold text-slate-100">SmartFan Login</CardTitle>
+          <CardDescription className="text-slate-400 pt-2">Enter your credentials to access the system</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
+          <div className="grid gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="username">Nama Pengguna</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
                 type="text"
@@ -45,10 +40,11 @@ const LoginPage = () => {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                className="bg-secondary/50"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Kata Sandi</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -56,17 +52,15 @@ const LoginPage = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="bg-secondary/50"
               />
             </div>
-            <Button onClick={handleLogin} className="w-full">
-              Masuk
+            <Button 
+              onClick={handleLogin} 
+              className="w-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-[0_0_15px_hsl(var(--primary)/0.5)] hover:shadow-[0_0_25px_hsl(var(--primary)/0.7)]"
+            >
+              Connect to System
             </Button>
-            <div className="mt-4 text-center text-sm">
-              Belum punya akun?{' '}
-              <Link to="/register" className="underline text-primary">
-                Daftar
-              </Link>
-            </div>
           </div>
         </CardContent>
       </Card>
