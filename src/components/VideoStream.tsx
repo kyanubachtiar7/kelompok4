@@ -1,57 +1,32 @@
 import React from 'react';
-import { Skeleton } from './ui/skeleton';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { Terminal } from 'lucide-react';
 
 const VideoStream = () => {
-  const streamUrl = 'https://kameraku.kyanu.my.id/video';
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
-
-  const handleLoad = () => {
-    setIsLoading(false);
-  };
-
-  const handleError = () => {
-    setIsLoading(false);
-    setError(`Gagal memuat stream video. Pastikan server di ${streamUrl} berjalan dan dapat diakses.`);
-  };
-
-  // Set timeout untuk error jika stream tidak kunjung termuat
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isLoading) {
-        handleError();
-      }
-    }, 15000); // 15 detik timeout
-
-    return () => clearTimeout(timer);
-  }, [isLoading]);
+  // A placeholder image URL. You can replace this with your specific image
+  // that includes the AI skeleton overlay.
+  const placeholderImageUrl = 'https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3';
 
   return (
     <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
-      {isLoading && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-background">
-          <Skeleton className="h-full w-full" />
-          <p className="absolute text-foreground">Memuat stream video...</p>
-        </div>
-      )}
-      {error && !isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center p-4">
-          <Alert variant="destructive">
-            <Terminal className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        </div>
-      )}
       <img
-        src={streamUrl}
-        alt="Pose Stream"
-        className={`h-full w-full object-contain ${isLoading || error ? 'hidden' : 'block'}`}
-        onLoad={handleLoad}
-        onError={handleError}
+        src={placeholderImageUrl}
+        alt="Pose Stream Placeholder"
+        className="h-full w-full object-cover brightness-75"
       />
+      
+      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+        <p className="text-white/80 text-lg font-medium backdrop-blur-sm p-2 rounded">
+          Live Feed Placeholder
+        </p>
+      </div>
+
+      {/* "LIVE | AI Tracking Active" badge */}
+      <div className="absolute top-3 left-3 flex items-center space-x-2 rounded-md bg-red-600 px-2.5 py-1 text-xs font-bold text-white shadow-lg">
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-white"></span>
+        </span>
+        <span>LIVE | AI Tracking Active</span>
+      </div>
     </div>
   );
 };
