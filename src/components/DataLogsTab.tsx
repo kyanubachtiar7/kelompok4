@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Download, Trash2 } from "lucide-react";
+import * as XLSX from 'xlsx';
 
 interface SensorLog {
   timestamp: string;
@@ -33,29 +34,37 @@ const DataLogsTab = ({ logs, resetLogs }: DataLogsTabProps) => {
   };
 
   const handleDownload = () => {
+    // Menyiapkan header untuk file Excel
     const headers = ["No", "Jam", "Data Suhu (°C)", "Data Kelembapan (%)"];
-    const csvRows = [
-      headers.join(','),
-      ...logs.map((log, index) => 
-        [
-          index + 1,
-          `"${log.timestamp}"`,
-          log.suhu.toFixed(1),
-          log.kelembapan.toFixed(0)
-        ].join(',')
-      )
-    ];
     
-    const csvString = csvRows.join('\n');
-    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'sensor_data_log.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Memformat data log agar sesuai dengan header
+    const data = logs.map((log, index) => ({
+      No: index + 1,
+      Jam: log.timestamp,
+      'Data Suhu (°C)': log.suhu.toFixed(1),
+      'Data Kelembapan (%)': log.kelembapan.toFixed(0)
+    }));
+
+    // Membuat worksheet dari data JSON
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    
+    // Membuat workbook baru
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data Sensor");
+
+    // Menambahkan header secara manual untuk memastikan urutan dan teks yang benar
+    XLSX.utils.sheet_add_aoa(worksheet, [headers], { origin: "A1" });
+
+    // Mengatur lebar kolom agar tabel terlihat rapi
+    worksheet["!cols"] = [
+      { wch: 5 },   // Kolom "No"
+      { wch: 15 },  // Kolom "Jam"
+      { wch: 20 },  // Kolom "Data Suhu (°C)"
+      { wch: 25 }   // Kolom "Data Kelembapan (%)"
+    ];
+
+    // Menghasilkan file Excel dan memicu unduhan
+    XLSX.writeFile(workbook, "sensor_data_log.xlsx");
   };
 
   return (
