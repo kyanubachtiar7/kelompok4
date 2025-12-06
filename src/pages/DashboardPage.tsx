@@ -38,7 +38,7 @@ const DashboardPage = () => {
     return 'text-yellow-400';
   };
 
-  const cardClasses = "bg-black/50 backdrop-blur-sm border border-primary/30 rounded-2xl shadow-[0_0_20px_rgba(251,146,60,0.2)] transition-all hover:border-primary/60 hover:shadow-[0_0_30px_rgba(251,146,60,0.3)]";
+  const cardClasses = "bg-card backdrop-blur-sm border border-primary/30 rounded-2xl shadow-[0_0_20px_hsl(var(--primary)/0.2)] transition-all hover:border-primary/60 hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] animate-glow";
 
   return (
     <div className="min-h-screen text-slate-50 p-4 md:p-8 font-sans">
@@ -100,11 +100,11 @@ const DashboardPage = () => {
               <div className="flex items-center space-x-4">
                 <Users className={cn(
                   "h-8 w-8 transition-all",
-                  presenceStatus === 'ADA ORANG' ? 'text-green-400 drop-shadow-[0_0_5px_#34d399]' : 'text-gray-500'
+                  presenceStatus === 'ADA ORANG' ? 'text-cyan-400 drop-shadow-[0_0_5px_#22d3ee]' : 'text-gray-500'
                 )} />
                 <div className={cn(
                   "text-2xl font-bold",
-                  presenceStatus === 'ADA ORANG' ? 'text-green-400' : 'text-gray-500'
+                  presenceStatus === 'ADA ORANG' ? 'text-cyan-400' : 'text-gray-500'
                 )}>
                   {presenceStatus === 'ADA ORANG' ? 'Active' : 'Inactive'}
                 </div>
@@ -120,11 +120,11 @@ const DashboardPage = () => {
               <div className="flex items-center space-x-4">
                 <Lightbulb className={cn(
                   "h-8 w-8 transition-all",
-                  ledStatus === 'LED MENYALA' ? 'text-yellow-300 drop-shadow-[0_0_8px_#facc15]' : 'text-gray-500'
+                  ledStatus === 'LED MENYALA' ? 'text-pink-400 drop-shadow-[0_0_8px_#f472b6]' : 'text-gray-500'
                 )} />
                 <div className={cn(
                   "text-2xl font-bold",
-                  ledStatus === 'LED MENYALA' ? 'text-yellow-300' : 'text-gray-500'
+                  ledStatus === 'LED MENYALA' ? 'text-pink-400' : 'text-gray-500'
                 )}>
                   {ledStatus === 'LED MENYALA' ? 'ON' : 'OFF'}
                 </div>

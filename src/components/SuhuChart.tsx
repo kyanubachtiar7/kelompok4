@@ -23,8 +23,8 @@ const SuhuChart = ({ data }: SuhuChartProps) => {
       >
         <defs>
           <linearGradient id="colorSuhu" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#fb923c" stopOpacity={0.8}/>
-            <stop offset="95%" stopColor="#fb923c" stopOpacity={0}/>
+            <stop offset="5%" stopColor="#f472b6" stopOpacity={0.8}/>
+            <stop offset="95%" stopColor="#f472b6" stopOpacity={0}/>
           </linearGradient>
         </defs>
         <CartesianGrid stroke="hsl(var(--border))" strokeOpacity={0.1} />
@@ -32,19 +32,19 @@ const SuhuChart = ({ data }: SuhuChartProps) => {
         <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}°C`} />
         <Tooltip
           contentStyle={{
-            backgroundColor: 'rgba(15, 23, 42, 0.7)',
+            backgroundColor: 'rgba(10, 5, 25, 0.7)',
             borderColor: 'hsl(var(--border))',
             backdropFilter: 'blur(4px)',
             borderRadius: '0.5rem',
             color: '#e2e8f0'
           }}
           labelStyle={{ color: '#e2e8f0' }}
-          itemStyle={{ color: '#fb923c' }}
+          itemStyle={{ color: '#f472b6' }}
         />
         <Area 
           type="monotone" 
           dataKey="suhu" 
-          stroke="#fb923c" 
+          stroke="#f472b6" 
           strokeWidth={2}
           fillOpacity={1} 
           fill="url(#colorSuhu)" 
