@@ -41,12 +41,15 @@ const DashboardPage = () => {
   const cardClasses = "bg-slate-900/30 backdrop-blur-md border border-slate-700 rounded-xl shadow-lg transition-transform hover:scale-[1.02] hover:border-slate-500";
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-50 p-4 md:p-8 font-sans">
+    <div className="min-h-screen bg-slate-900/80 text-slate-50 p-4 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-100 tracking-wider">
-            SmartFan Control
-          </h1>
+          <div className="flex items-center space-x-4">
+            <img src="/smart-fan.png" alt="Smart Fan" className="h-20" />
+            <h1 className="text-3xl font-bold text-slate-100 tracking-wider">
+              SmartFan Control
+            </h1>
+          </div>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
             <div className="flex items-center space-x-2 text-sm">
               <span className="relative flex h-3 w-3">

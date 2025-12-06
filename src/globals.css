@@ -55,7 +55,11 @@
   }
 
   body {
-    @apply bg-slate-900 text-foreground;
+    @apply text-foreground;
+    background-image: url('/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     min-height: 100vh;
   }
 }
