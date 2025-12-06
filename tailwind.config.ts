@@ -96,7 +96,7 @@ export default {
           },
         },
         "glow": {
-          "0%, 45%, 55%, 100%": { 
+          "0%, 100%": { 
             "box-shadow": "0 0 15px hsl(var(--primary) / 0.3), inset 0 0 5px hsl(var(--primary) / 0.2)" 
           },
           "50%": { 
@@ -112,7 +112,7 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-green": "pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "glow": "glow 480s ease-in-out infinite",
+        "glow": "glow 6s ease-in-out infinite",
         "fade-in": "fade-in 0.4s ease-out forwards",
       },
     },
