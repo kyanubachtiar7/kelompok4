@@ -23,7 +23,8 @@ const DashboardPage = () => {
     presenceStatus,
     ledStatus,
     buzzerStatus,
-    sensorHistory
+    sensorHistory,
+    resetSensorHistory
   } = useMQTT();
 
   const handleLogout = () => {
@@ -136,8 +137,8 @@ const DashboardPage = () => {
               </Card>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className={cardClasses}><CardHeader><CardTitle>Riwayat Suhu</CardTitle></CardHeader><CardContent><SuhuChart data={formattedSuhuHistory} /></CardContent></Card>
-              <Card className={cardClasses}><CardHeader><CardTitle>Riwayat Kelembapan</CardTitle></CardHeader><CardContent><KelembapanChart data={formattedKelembapanHistory} /></CardContent></Card>
+              <Card className={cardClasses}><CardHeader><CardTitle>Real-time Suhu</CardTitle></CardHeader><CardContent><SuhuChart data={formattedSuhuHistory} /></CardContent></Card>
+              <Card className={cardClasses}><CardHeader><CardTitle>Real-time Kelembapan</CardTitle></CardHeader><CardContent><KelembapanChart data={formattedKelembapanHistory} /></CardContent></Card>
             </div>
           </TabsContent>
 
@@ -146,7 +147,7 @@ const DashboardPage = () => {
             <Card className={cardClasses}>
               <CardHeader><CardTitle>Sensor Data Log</CardTitle></CardHeader>
               <CardContent>
-                <DataLogsTab logs={sensorHistory} />
+                <DataLogsTab logs={sensorHistory} resetLogs={resetSensorHistory} />
               </CardContent>
             </Card>
           </TabsContent>

@@ -17,6 +17,7 @@ interface MQTTContextState {
   ledStatus?: string;
   buzzerStatus?: string;
   sensorHistory: SensorHistory[];
+  resetSensorHistory: () => void;
 }
 
 const MQTTContext = createContext<MQTTContextState | undefined>(undefined);
@@ -35,6 +36,10 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
   const [buzzerStatus, setBuzzerStatus] = useState<string | undefined>();
   const [sensorHistory, setSensorHistory] = useState<SensorHistory[]>([]);
   const lastUpdateTime = useRef(0);
+
+  const resetSensorHistory = () => {
+    setSensorHistory([]);
+  };
 
   useEffect(() => {
     const clientId = `web_dashboard_${Date.now()}_${Math.random().toString(16).substring(2, 8)}`;
@@ -114,6 +119,7 @@ export const MQTTProvider = ({ children }: { children: ReactNode }) => {
     ledStatus,
     buzzerStatus,
     sensorHistory,
+    resetSensorHistory,
   };
 
   return <MQTTContext.Provider value={value}>{children}</MQTTContext.Provider>;
