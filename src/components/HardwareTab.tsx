@@ -3,12 +3,12 @@ import { Cpu, Thermometer, ToggleRight, Bell, Camera } from "lucide-react";
 
 const hardwareComponents = [
   {
-    name: "ESP32 Microcontroller",
+    name: "ESP8266 Microcontroller",
     description: "Main brain of the system, providing Wi-Fi connectivity and processing power.",
     icon: <Cpu className="w-8 h-8 text-primary" />,
   },
   {
-    name: "DHT11/DHT22 Sensor",
+    name: "DHT22 Sensor",
     description: "Measures ambient temperature and humidity in real-time.",
     icon: <Thermometer className="w-8 h-8 text-primary" />,
   },

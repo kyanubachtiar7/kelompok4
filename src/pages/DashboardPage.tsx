@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '../context/AuthContext';
-import { Thermometer, Droplets, Users, Lightbulb, Bell, User as UserIcon } from 'lucide-react';
+import { Thermometer, Droplets, Lightbulb, Bell, User as UserIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import VideoStream from '@/components/VideoStream';
 import { useMQTT } from '../context/MQTTContext';
@@ -10,6 +10,8 @@ import HumidityGauge from '@/components/HumidityGauge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DataLogsTab from '@/components/DataLogsTab';
 import HardwareTab from '@/components/HardwareTab';
+import SuhuChart from '@/components/SuhuChart';
+import KelembapanChart from '@/components/KelembapanChart';
 
 const DashboardPage = () => {
   const { logout } = useAuth();
@@ -36,6 +38,9 @@ const DashboardPage = () => {
   };
 
   const cardClasses = "bg-card/80 backdrop-blur-sm border border-primary/20 transition-all hover:border-primary/40";
+
+  const formattedSuhuHistory = sensorHistory.map(d => ({ name: d.timestamp, suhu: d.suhu })).reverse();
+  const formattedKelembapanHistory = sensorHistory.map(d => ({ name: d.timestamp, kelembapan: d.kelembapan })).reverse();
 
   return (
     <div className="min-h-screen text-slate-50 p-4 md:p-8 font-sans">
@@ -129,6 +134,10 @@ const DashboardPage = () => {
                   </div>
                 </CardContent>
               </Card>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className={cardClasses}><CardHeader><CardTitle>Riwayat Suhu</CardTitle></CardHeader><CardContent><SuhuChart data={formattedSuhuHistory} /></CardContent></Card>
+              <Card className={cardClasses}><CardHeader><CardTitle>Riwayat Kelembapan</CardTitle></CardHeader><CardContent><KelembapanChart data={formattedKelembapanHistory} /></CardContent></Card>
             </div>
           </TabsContent>
 

@@ -99,12 +99,17 @@ export default {
           "0%, 100%": { "box-shadow": "0 0 15px hsl(var(--primary) / 0.3), inset 0 0 5px hsl(var(--primary) / 0.2)" },
           "50%": { "box-shadow": "0 0 25px hsl(var(--primary) / 0.5), inset 0 0 8px hsl(var(--primary) / 0.3)" }
         },
+        "fade-in": {
+          "from": { opacity: "0", transform: "translateY(5px)" },
+          "to": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-green": "pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "glow": "glow 5s ease-in-out infinite",
+        "fade-in": "fade-in 0.4s ease-out forwards",
       },
     },
   },
