@@ -11,28 +11,28 @@ import {
 
 const hardwareComponents = [
   {
-    name: "ESP8266 Microcontroller",
-    description: "Main brain of the system, providing Wi-Fi connectivity and processing power.",
+    name: "Mikrokontroler ESP8266",
+    description: "Otak utama sistem, menyediakan konektivitas Wi-Fi dan daya pemrosesan.",
     icon: <Cpu className="w-8 h-8 text-primary" />,
   },
   {
-    name: "DHT22 Sensor",
-    description: "Measures ambient temperature and humidity in real-time.",
+    name: "Sensor DHT22",
+    description: "Mengukur suhu dan kelembapan lingkungan secara real-time.",
     icon: <Thermometer className="w-8 h-8 text-primary" />,
   },
   {
-    name: "Relay Module",
-    description: "Acts as an electrical switch to control the fan's power.",
+    name: "Modul Relay",
+    description: "Berfungsi sebagai sakelar listrik untuk mengontrol daya kipas.",
     icon: <ToggleRight className="w-8 h-8 text-primary" />,
   },
   {
-    name: "Piezo Buzzer",
-    description: "Provides audible alerts and notifications.",
+    name: "Buzzer",
+    description: "Memberikan peringatan dan notifikasi yang dapat didengar.",
     icon: <Bell className="w-8 h-8 text-primary" />,
   },
   {
-    name: "Camera Module",
-    description: "Enables live video feed and AI-powered pose detection.",
+    name: "Modul Kamera",
+    description: "Memungkinkan umpan video langsung dan deteksi pose bertenaga AI.",
     icon: <Camera className="w-8 h-8 text-primary" />,
   },
 ];
