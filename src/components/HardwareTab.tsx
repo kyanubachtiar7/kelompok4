@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Cpu, Thermometer, ToggleRight, Bell, Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -9,8 +9,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { DialogTrigger } from "@/components/ui/dialog";
-import HardwareDetailDialog from "./HardwareDetailDialog";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"; // Import Dialog components
+import HardwareDetailContent from "./HardwareDetailContent"; // Import the new content component
 
 const hardwareComponents = [
   {
@@ -53,30 +53,21 @@ const hardwareComponents = [
 const cardClasses = "bg-card/80 backdrop-blur-sm border border-primary/20 transition-all duration-300 ease-in-out hover:border-primary/40 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10 h-full cursor-pointer";
 
 const HardwareTab = () => {
-  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState<typeof hardwareComponents[0] | null>(null);
-
-  const handleCardClick = (component: typeof hardwareComponents[0]) => {
-    setSelectedComponent(component);
-    setIsDetailDialogOpen(true);
-  };
-
   return (
-    <>
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full"
-      >
-        <CarouselContent>
-          {hardwareComponents.map((component, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-4">
+    <Carousel
+      opts={{
+        align: "start",
+      }}
+      className="w-full"
+    >
+      <CarouselContent>
+        {hardwareComponents.map((component, index) => (
+          <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-4">
+            <Dialog> {/* Each card now has its own Dialog */}
               <DialogTrigger asChild>
                 <Card 
                   className={cn(cardClasses, "opacity-0 animate-fade-in")}
                   style={{ animationDelay: `${index * 100}ms` }}
-                  onClick={() => handleCardClick(component)}
                 >
                   <CardHeader className="flex flex-row items-center gap-4 space-y-0">
                     {component.icon}
@@ -87,19 +78,16 @@ const HardwareTab = () => {
                   </CardContent>
                 </Card>
               </DialogTrigger>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="ml-12" />
-        <CarouselNext className="mr-12" />
-      </Carousel>
-
-      <HardwareDetailDialog 
-        isOpen={isDetailDialogOpen} 
-        onOpenChange={setIsDetailDialogOpen} 
-        component={selectedComponent} 
-      />
-    </>
+              <DialogContent className="sm:max-w-[425px] bg-card/90 backdrop-blur-lg border border-primary/20 shadow-2xl shadow-primary/10">
+                <HardwareDetailContent component={component} />
+              </DialogContent>
+            </Dialog>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious className="ml-12" />
+      <CarouselNext className="mr-12" />
+    </Carousel>
   );
 };
 
